@@ -14,6 +14,8 @@ import Chat from '../users/chat';
 import Posts from '../users/post';
 import Profile from '../users/profile';
 import CreateSession from '../users/CreateSession';
+import Login from '../users/login';
+import Signup from '../users/signup'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<RootErrorBoundary />}>
@@ -41,6 +43,12 @@ const router = createBrowserRouter(
       </Route>
       <Route element={<CreateSession />}>
         <Route path='/createsession' element={<CreateSession />} />
+      </Route>
+      <Route element={<Login />}>
+        <Route path='/login' element={<Login />} />
+      </Route>
+      <Route element={<Signup />}>
+        <Route path='/signup' element={<Signup />} />
       </Route>
 
       {/* Private Routes */}
