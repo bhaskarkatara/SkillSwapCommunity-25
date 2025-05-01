@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { signupToOtp } from "../api/auth"; // Adjust path as needed
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -28,11 +28,19 @@ const SignupPage = () => {
     setSkills((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     const signupData = { name, email, contact, skills, password };
-    console.log("Signup Data:", signupData);
-    // Replace this with actual API call
-    navigate("/home");
+    console.log(signupData);
+    try {
+      const response = await signupToOtp(signupData);
+      console.log("Signup Success:", response);
+      // Optionally store something or show a success message
+      navigate("/otp", { state: signupData });
+      // Redirect to OTP page (update path if needed)
+    } catch (error: any) {
+      console.error("Signup Error:", error.response?.data || error.message);
+      alert("Signup failed. Please try again.");
+    }
   };
 
   return (
