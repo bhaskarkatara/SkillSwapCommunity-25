@@ -21,11 +21,11 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<RootErrorBoundary />}>
       {/* Public Routes */}
-      <Route element={<Public />}>
+      {/* <Route element={<Public />}>
         <Route path='/' element={<Public />} />
-      </Route>
+      </Route> */}
       <Route element={<Home />}>
-        <Route path='/home' element={<Home />} />
+        <Route path='/' element={<Home />} />
       </Route>
       <Route element={<Dashboard />}>
         <Route path='/dashboard' element={<Dashboard />} />

@@ -22,3 +22,16 @@ export const signupToOtp = async (data: {
   const response = await api.post("/auth/signup-to-otp", data);
   return response.data;
 };
+
+
+export const verifyOtp = async (data: {
+    name: string;
+    email: string;
+    contact: string;
+    skills: string[];
+    password: string;
+    otp: number;
+  }) => {
+    const response = await api.post("/auth/verify-otp", data);
+    return response.data;
+  };
