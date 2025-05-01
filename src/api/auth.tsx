@@ -25,6 +25,7 @@ export const signupToOtp = async (data: {
 
 
 export const verifyOtp = async (data: {
+    
     name: string;
     email: string;
     contact: string;
@@ -32,6 +33,29 @@ export const verifyOtp = async (data: {
     password: string;
     otp: number;
   }) => {
-    const response = await api.post("/auth/verify-otp", data);
+    const response = await api.post("auth/verifyOtp", data);
+    return response.data;
+  };
+
+
+  export const login = async (data: {
+    email: string;
+    password: string;
+  }) => {
+    const response = await api.post("auth/login", data);
+    return response.data;
+  };
+
+
+
+  export const getUserProfile = async () => {
+    const token = localStorage.getItem("authToken"); // or "token", depending on how you stored it
+  
+    const response = await api.get("/user/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
     return response.data;
   };

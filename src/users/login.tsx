@@ -1,35 +1,43 @@
 import React, { useState } from 'react';
-import { Navigate } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import { login } from "../api/auth";
+import { StatementSync } from 'node:sqlite';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-   const navigate = useNavigate();
-  const handleLogin = () => {
-    console.log({ email, password });
-    // here you can add your API call
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const payload = { email, password };
+      // console.log("Logging in with:", payload);
+      const response = await login(payload);
+      localStorage.setItem("authToken", response.token);
+     
+      console.log(response);
+      navigate('/dashboard' , { state: email });
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Something went wrong. Please try again.");
+    }
   };
-   function HandleSignup()
-   {
-    navigate('/signup');
-   }
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-blue-300 flex flex-col">
-      
       {/* Navbar */}
       <nav className="bg-white shadow-md p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold text-blue-600">Skill Swap Community</h1>
         <div className="flex space-x-6 text-gray-700 font-medium">
-          <a href="#">Home</a>
-          <a href="#">About Us</a>
-          <a href="#">Contact</a>
+          <button onClick={() => navigate('/')} className="hover:underline">Home</button>
+          <button onClick={() => navigate('/about')} className="hover:underline">About Us</button>
+          <button onClick={() => navigate('/contact')} className="hover:underline">Contact</button>
         </div>
       </nav>
 
-      {/* Main login area */}
+      {/* Main login form */}
       <div className="flex flex-1 justify-center items-center">
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">to Your Account</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Welcome Back</h2>
 
           <div className="space-y-4">
             <div>
@@ -55,7 +63,7 @@ const LoginPage = () => {
             </div>
 
             <div className="text-right text-sm">
-              <a href="#" className="text-blue-600 hover:underline">Forgot Password?</a>
+              <button className="text-blue-600 hover:underline">Forgot Password?</button>
             </div>
 
             <button
@@ -81,12 +89,14 @@ const LoginPage = () => {
             </div>
 
             <div className="text-center text-sm mt-4">
-              New here? <a href="#" className="text-blue-600 font-semibold hover:underline"  onClick={HandleSignup}>Sign Up</a>
+              New here?{" "}
+              <button onClick={() => navigate("/signup")} className="text-blue-600 font-semibold hover:underline">
+                Sign Up
+              </button>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

@@ -5,39 +5,48 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { verifyOtp } from "../api/auth";
+import { verifyOtp } from "../api/auth";
 
 const OtpPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const signupData = location.state; // Extract signup data passed from the Signup page
-
+  const signupData = location.state; 
+     console.log(signupData);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Allow only digits and ensure it's 4 digits long
-    if (/^\d{0,4}$/.test(value)) {
+    // Allow only digits and ensure it's 6 digits long
+    if (/^\d{0,6}$/.test(value)) {
       setOtp(value);
       setError(""); // Clear error on input change
     }
   };
 
   const handleVerifyOtp = async () => {
-    if (otp.length !== 4) {
-      setError("Please enter a 4-digit OTP.");
+    if (otp.length !== 6) {
+      setError("Please enter a 6-digit OTP.");
       return;
     }
 
-    // try {
-    //   const res = await verifyOtp({ email: signupData.email, otp });
-    //   console.log("OTP Verified:", res);
-    //   navigate("/dashboard", { state: signupData }); // Redirect to dashboard with user data
-    // } catch (err) {
-    //   console.error("OTP Verification Error:", err);
-    //   setError("Invalid OTP or verification failed.");
-    // }
+    try {
+        const numericOtp = parseInt(otp, 10);
+      const payload = {
+        userDetails : {
+            ...signupData, // includes name, email, contact, skills, password
+            
+        }, otp: numericOtp
+       
+      };
+      console.log(payload);
+      const res = await verifyOtp(payload);
+      console.log("OTP Verified:", res);
+      navigate("/login", { state: signupData }); // Redirect to dashboard with user data
+    } catch (err) {
+      console.error("OTP Verification Error:", err);
+      setError("Invalid OTP or verification failed.");
+    }
   };
 
   return (
@@ -49,12 +58,12 @@ const OtpPage = () => {
           <div className="space-y-4">
             {/* OTP Input */}
             <div>
-              <label className="block mb-1 text-sm font-medium">Enter 4-Digit OTP</label>
+              <label className="block mb-1 text-sm font-medium">Enter 6-Digit OTP</label>
               <Input
                 value={otp}
                 onChange={handleOtpChange}
                 placeholder="Enter the OTP"
-                maxLength={4}
+                maxLength={6} // Adjusted for 6 digits
                 className="border-gray-300"
               />
             </div>

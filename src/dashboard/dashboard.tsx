@@ -1,6 +1,24 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useState} from "react";
+import { getUserProfile } from "@/api/auth";
 const Dashboard = () => {
+  // const email = location.state;
+  const [user, setUser] = useState<any>(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getUserProfile();
+        setUser(data);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+        setError("Failed to load user data. Please log in again.");
+      }
+    };
+
+    fetchProfile();
+  }, []);
+  console.log(user);
   return (
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
@@ -40,7 +58,7 @@ const Dashboard = () => {
               100x100
             </div>
             <div>
-              <h3 className="text-xl font-semibold">John Doe</h3>
+              <h3 className="text-xl font-semibold">{user.name}</h3>
               <p className="text-gray-600">Skills: Web Development, Graphic Design</p>
             </div>
           </div>
