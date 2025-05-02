@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from "../api/auth";
-import { StatementSync } from 'node:sqlite';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +12,6 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const payload = { email, password };
-      // console.log("Logging in with:", payload);
       const response = await login(payload);
       localStorage.setItem("authToken", response.token);
      
@@ -21,6 +22,54 @@ const LoginPage = () => {
       alert("Something went wrong. Please try again.");
     }
   };
+
+  return (
+    <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
+      <Card className="w-full max-w-xl shadow-lg rounded-2xl">
+        <CardContent className="">
+          <h1 className="text-3xl font-bold text-center">Welcome Back</h1>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block mb-1 text-sm font-medium">Email</label>
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                type="email"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 text-sm font-medium">Password</label>
+              <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                type="password"
+              />
+            </div>
+          </div>
+
+          <Button className="w-full mt-4"
+           onClick={handleLogin}
+           >
+            Log In
+          </Button>
+
+          <p className="text-sm text-center text-gray-600 mt-4">
+            Don't have an account?{" "}
+            <span
+              onClick={() => navigate("/signup")}
+              className="text-blue-500 hover:underline cursor-pointer"
+            >
+              Signup here
+            </span>
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-blue-300 flex flex-col">

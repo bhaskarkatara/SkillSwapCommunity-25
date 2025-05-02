@@ -44,9 +44,9 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-xl p-8 shadow-lg rounded-2xl">
-        <CardContent className="space-y-6">
+    <div className="w-full min-h-screen flex items-center justify-center bg-gray-100 py-8">
+      <Card className="w-full max-w-xl shadow-lg rounded-2xl">
+        <CardContent>
           <h1 className="text-3xl font-bold text-center">Create an Account</h1>
 
           <div className="space-y-4">

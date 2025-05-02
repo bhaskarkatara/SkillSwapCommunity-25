@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +9,7 @@ const OtpPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const signupData = location.state; 
-     console.log(signupData);
+    //  console.log(signupData);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
@@ -42,7 +40,7 @@ const OtpPage = () => {
       console.log(payload);
       const res = await verifyOtp(payload);
       console.log("OTP Verified:", res);
-      navigate("/login", { state: signupData }); // Redirect to dashboard with user data
+      navigate("/login"); // Redirect to dashboard with user data
     } catch (err) {
       console.error("OTP Verification Error:", err);
       setError("Invalid OTP or verification failed.");
