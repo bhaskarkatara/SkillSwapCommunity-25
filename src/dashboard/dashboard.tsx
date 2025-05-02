@@ -9,6 +9,7 @@ const Dashboard = () => {
     const fetchProfile = async () => {
       try {
         const data = await getUserProfile();
+        console.log(data);
         setUser(data);
       } catch (err) {
         console.error("Error fetching user profile:", err);

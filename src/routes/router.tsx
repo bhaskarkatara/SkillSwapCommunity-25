@@ -17,6 +17,7 @@ import CreateSession from '../users/CreateSession';
 import Login from '../users/login';
 import Signup from '../users/signup';
 import OtpPage from '@/users/otpPage';
+import UpdateProfilePage from '@/users/updateDetails';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<RootErrorBoundary />}>
@@ -53,6 +54,9 @@ const router = createBrowserRouter(
       </Route>
       <Route element={<OtpPage />}>
         <Route path='/otp' element={<OtpPage />} />
+      </Route>
+      <Route element={<UpdateProfilePage />}>
+        <Route path='/update' element={<UpdateProfilePage />} />
       </Route>
 
       {/* Private Routes */}
