@@ -5,6 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { signupToOtp } from '../api/auth'; // Adjust path as needed
 import Spinner from '@/components/ui/Spinner';
+import toast from 'react-hot-toast';
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -17,15 +25,19 @@ const SignupPage = () => {
   const [skillInput, setSkillInput] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleAddSkill = () => {
-    if (skillInput.trim() !== '') {
-      setSkills(prev => [...prev, skillInput.trim()]);
-      setSkillInput('');
-    }
+  const [open, setOpen] = useState(false);
+  const [allSkills, setAllSkills] = useState(['DSA', 'Chutiyapa', 'Backchodi']);
+
+  const handleAddSkill = (skill: string) => {
+    setSkills(prev => [...prev, skill]);
+    setAllSkills(allSkills.filter(val => skill !== val));
+    setOpen(false);
+    setSkillInput('');
   };
 
-  const handleRemoveSkill = (indexToRemove: number) => {
-    setSkills(prev => prev.filter((_, index) => index !== indexToRemove));
+  const handleRemoveSkill = (skill: string) => {
+    setSkills(skills.filter(val => skill !== val));
+    setAllSkills(prev => [...prev, skill]);
   };
 
   const handleSignup = async () => {
@@ -33,15 +45,19 @@ const SignupPage = () => {
     try {
       setLoading(true);
       const response = await signupToOtp(signupData);
-      console.log('Signup Success:', response);
+
+      if (response.success === false) {
+        setLoading(false);
+        return toast.error(response.message);
+      }
+
       // Optionally store something or show a success message
       navigate('/otp', { state: signupData });
       // Redirect to OTP page (update path if needed)
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
-      console.error('Signup Error:', error.response?.data || error.message);
-      alert('Signup failed. Please try again.');
+      toast.error('Something went wrong');
     }
   };
 
@@ -77,8 +93,9 @@ const SignupPage = () => {
                 Contact Number
               </label>
               <Input
+                maxLength={10}
                 value={contact}
-                onChange={e => setContact(e.target.value)}
+                onChange={e => setContact(e.target.value.replace(/\D/g, ''))}
                 placeholder='Enter your contact number'
               />
             </div>
@@ -86,14 +103,30 @@ const SignupPage = () => {
             <div>
               <label className='block mb-1 text-sm font-medium'>Skills</label>
               <div className='flex gap-2 mb-2'>
-                <Input
-                  value={skillInput}
-                  onChange={e => setSkillInput(e.target.value)}
-                  placeholder='Enter a skill'
-                />
-                <Button type='button' onClick={handleAddSkill}>
-                  Add
-                </Button>
+                <Command className='border rounded-md mb-2'>
+                  <CommandInput
+                    placeholder='Search skills...'
+                    value={skillInput}
+                    onValueChange={setSkillInput}
+                    onFocus={() => setOpen(true)}
+                  />
+                  {open && skillInput !== '' && (
+                    <CommandEmpty>No results found.</CommandEmpty>
+                  )}
+                  {open && (
+                    <CommandList>
+                      {allSkills.map((skill, index) => (
+                        <CommandItem
+                          key={index}
+                          className='cursor-pointer border rounded-none'
+                          onSelect={() => handleAddSkill(skill)}
+                        >
+                          {skill}
+                        </CommandItem>
+                      ))}
+                    </CommandList>
+                  )}
+                </Command>
               </div>
 
               <div className='flex flex-wrap gap-2'>
@@ -105,8 +138,8 @@ const SignupPage = () => {
                     {skill}
                     <button
                       type='button'
-                      onClick={() => handleRemoveSkill(index)}
-                      className='ml-2 text-blue-500 hover:text-red-500 font-bold'
+                      onClick={() => handleRemoveSkill(skill)}
+                      className='cursor-pointer text-lg ml-2 text-blue-500 hover:text-red-500 font-bold'
                     >
                       x
                     </button>

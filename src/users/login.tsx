@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/Spinner';
+import toast from 'react-hot-toast';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,13 +17,19 @@ const LoginPage = () => {
       const payload = { email, password };
       setLoading(true);
       const response = await login(payload);
+
+      if (response.success === false) {
+        setLoading(false);
+        return toast.error(response.message);
+      }
+
       localStorage.setItem('authToken', response.token);
-      setLoading(false);
       navigate('/dashboard', { state: email });
-    } catch (err) {
       setLoading(false);
-      console.error('Login error:', err);
-      alert('Something went wrong. Please try again.');
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      toast.error('something went wrong');
     }
   };
 

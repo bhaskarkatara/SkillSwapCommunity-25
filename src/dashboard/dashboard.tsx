@@ -4,14 +4,6 @@ import { getUserProfile } from '@/api/auth';
 import { User } from '@/types/user';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/components/ui/Spinner';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from '@radix-ui/react-dialog';
-import { Button } from '@/components/ui/button';
-import { DialogHeader } from '@/components/ui/dialog';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -26,9 +18,7 @@ const Dashboard = () => {
 
         const data = await getUserProfile();
 
-        // setTimeout(() => {
         setLoading(false);
-        // }, 4000);
         setUser(data);
       } catch (err) {
         setLoading(false);
@@ -90,7 +80,7 @@ const Dashboard = () => {
           <div className='flex items-center space-x-6'>
             <div className='relative inline-flex items-center justify-center w-24 h-24 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'>
               <span className=' text-5xl text-gray-600 dark:text-gray-300'>
-                {user.name.substring(0, 1)}
+                {user.name.substring(0, 1).toUpperCase()}
               </span>
             </div>{' '}
             <div>
