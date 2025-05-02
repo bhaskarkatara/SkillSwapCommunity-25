@@ -4,6 +4,14 @@ import { getUserProfile } from '@/api/auth';
 import { User } from '@/types/user';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '@/components/ui/Spinner';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@radix-ui/react-dialog';
+import { Button } from '@/components/ui/button';
+import { DialogHeader } from '@/components/ui/dialog';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,13 +40,17 @@ const Dashboard = () => {
     fetchProfile();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/login', { replace: true });
+  };
+
   if (loading || !user) return <Spinner />;
 
   const skillString = user.skills.join(', ');
 
   return (
     <div className='min-h-screen bg-gray-100 flex'>
-      {/* Sidebar */}
       <aside className='w-64 bg-white p-6 shadow-md'>
         <h1 className='text-2xl font-bold mb-8'>Dashboard</h1>
         <nav className='space-y-6'>
@@ -62,12 +74,17 @@ const Dashboard = () => {
             <i className='fas fa-cog'></i>
             <span>Settings</span>
           </div>
+          <div
+            onClick={handleLogout}
+            className='flex items-center space-x-3 text-gray-700 hover:text-red-500 cursor-pointer'
+          >
+            <i className='fa-solid fa-right-from-bracket'></i>
+            <span>Log Out</span>
+          </div>
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className='flex-1 p-8 space-y-8'>
-        {/* User Profile */}
         <section className='bg-white rounded-xl p-6 shadow'>
           <h2 className='text-2xl font-bold mb-4'>User Profile</h2>
           <div className='flex items-center space-x-6'>
@@ -83,7 +100,6 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Skills Offered */}
         <section className='bg-white rounded-xl p-6 shadow'>
           <h2 className='text-2xl font-bold mb-4'>Skills Offered</h2>
           <ul className='list-disc list-inside text-gray-700 space-y-1'>
@@ -93,7 +109,6 @@ const Dashboard = () => {
           </ul>
         </section>
 
-        {/* Skill Matching */}
         <section className='bg-white rounded-xl p-6 shadow'>
           <h2 className='text-2xl font-bold mb-4'>Skill Matching</h2>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -116,7 +131,6 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Progress Tracker */}
         <section className='bg-white rounded-xl p-6 shadow'>
           <h2 className='text-2xl font-bold mb-4'>Progress Tracker</h2>
           <div className='w-full bg-gray-200 rounded-full h-3 mb-4'>
