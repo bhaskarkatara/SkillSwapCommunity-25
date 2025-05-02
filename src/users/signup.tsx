@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,7 +48,6 @@ const SignupPage = () => {
           <h1 className="text-3xl font-bold text-center">Create an Account</h1>
 
           <div className="space-y-4">
-            {/* Name */}
             <div>
               <label className="block mb-1 text-sm font-medium">Name</label>
               <Input
@@ -60,7 +57,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Email */}
             <div>
               <label className="block mb-1 text-sm font-medium">Email</label>
               <Input
@@ -71,7 +67,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Contact Number */}
             <div>
               <label className="block mb-1 text-sm font-medium">Contact Number</label>
               <Input
@@ -81,7 +76,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Skills */}
             <div>
               <label className="block mb-1 text-sm font-medium">Skills</label>
               <div className="flex gap-2 mb-2">
@@ -95,7 +89,6 @@ const SignupPage = () => {
                 </Button>
               </div>
 
-              {/* Skills Display */}
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (
                   <div
@@ -108,14 +101,13 @@ const SignupPage = () => {
                       onClick={() => handleRemoveSkill(index)}
                       className="ml-2 text-blue-500 hover:text-red-500 font-bold"
                     >
-                      ×
+                      x
                     </button>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label className="block mb-1 text-sm font-medium">Password</label>
               <Input
@@ -127,12 +119,10 @@ const SignupPage = () => {
             </div>
           </div>
 
-          {/* Signup Button */}
           <Button className="w-full mt-4" onClick={handleSignup}>
             Sign Up
           </Button>
 
-          {/* Login Redirect */}
           <p className="text-sm text-center text-gray-600 mt-4">
             Already have an account?{" "}
             <span
