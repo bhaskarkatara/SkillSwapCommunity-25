@@ -25,8 +25,7 @@ const LandingPage = () => {
           </h1>
           <div className='mt-8 flex justify-center space-x-6'>
             <button
-
-              className='bg-white cursor-pointer text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-gray-100 transition'
+              className='border-2 border-white cursor-pointer text-white font-semibold px-8 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition'
               onClick={handleSignup}
             >
               Sign Up
