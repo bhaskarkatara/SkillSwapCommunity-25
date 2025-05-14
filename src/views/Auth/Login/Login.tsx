@@ -1,21 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api/auth';
+import { login } from '../../../api/auth';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/Spinner';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/context/auth/useAuth';
-const LoginPage = () => {
+import appRoutes from '@/routes/appRoutes';
+
+const Login = () => {
+  const navigate = useNavigate();
   const { fetchUser } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
+      if (email === '' || password === '')
+        return toast.error('Please fill in all the details');
+
       const payload = { email, password };
       setLoading(true);
       const response = await login(payload);
@@ -24,9 +30,10 @@ const LoginPage = () => {
         setLoading(false);
         return toast.error(response.message);
       }
+
       localStorage.setItem('token', response.data);
       await fetchUser();
-      navigate('/dashboard');
+      navigate(appRoutes.dashboard);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -38,6 +45,7 @@ const LoginPage = () => {
   return (
     <div className='w-full min-h-screen flex items-center justify-center bg-gray-100'>
       {loading && <Spinner />}
+
       <Card className='w-full max-w-xl shadow-lg rounded-2xl'>
         <CardContent className=''>
           <h1 className='text-3xl font-bold text-center'>Welcome Back</h1>
@@ -47,7 +55,7 @@ const LoginPage = () => {
               <label className='block mb-1 text-sm font-medium'>Email</label>
               <Input
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={({ target }) => setEmail(target.value)}
                 placeholder='Enter your email'
                 type='email'
               />
@@ -57,7 +65,7 @@ const LoginPage = () => {
               <label className='block mb-1 text-sm font-medium'>Password</label>
               <Input
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={({ target }) => setPassword(target.value)}
                 placeholder='Enter your password'
                 type='password'
               />
@@ -71,7 +79,7 @@ const LoginPage = () => {
           <p className='text-sm text-center text-gray-600 mt-4'>
             Don't have an account?{' '}
             <span
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate(appRoutes.signup)}
               className='text-blue-500 hover:underline cursor-pointer'
             >
               Signup here
@@ -83,4 +91,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
