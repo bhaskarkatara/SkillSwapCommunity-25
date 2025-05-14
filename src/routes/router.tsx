@@ -12,7 +12,7 @@ import Posts from '../users/post';
 import Profile from '../users/profile';
 import CreateSession from '../users/CreateSession';
 import Login from '../users/login';
-import Signup from '../users/signup';
+import Signup from '../views/Auth/Signup/SignupPage';
 import OtpPage from '@/users/otpPage';
 import UpdateProfilePage from '@/users/updateDetails';
 import Private from './Private';

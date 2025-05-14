@@ -1,9 +1,9 @@
+import { ISignUp } from '@/types/user';
 import axios from 'axios';
-
-const BASE_URL = 'http://192.168.29.159:8081';
+const BASE_URL = 'https://skills-swap-backend-1.onrender.com';
 
 // Reusable Axios instance
-const api = axios.create({
+export const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -11,13 +11,7 @@ const api = axios.create({
 });
 
 // Signup to OTP
-export const signupToOtp = async (data: {
-  name: string;
-  email: string;
-  contact: string;
-  skills: string[];
-  password: string;
-}) => {
+export const signUp = async (data: ISignUp) => {
   const response = await api.post('/auth/signup-to-otp', data);
   return response.data;
 };

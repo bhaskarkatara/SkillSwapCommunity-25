@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Spinner from '@/components/ui/Spinner';
 import toast from 'react-hot-toast';
+import { useAuth } from '@/context/auth/useAuth';
 const LoginPage = () => {
+  const { fetchUser } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,9 +24,9 @@ const LoginPage = () => {
         setLoading(false);
         return toast.error(response.message);
       }
-
-      localStorage.setItem('token', response.token);
-      navigate('/dashboard', { state: email });
+      localStorage.setItem('token', response.data);
+      await fetchUser();
+      navigate('/dashboard');
       setLoading(false);
     } catch (err) {
       console.log(err);

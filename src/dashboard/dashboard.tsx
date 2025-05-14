@@ -1,43 +1,16 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { getUserProfile } from '@/api/auth';
-import { User } from '@/types/user';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '@/components/ui/Spinner';
+import { useUser } from '@/context/auth/useUser';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<User>();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setLoading(true);
-
-        const data = await getUserProfile();
-
-        setLoading(false);
-        setUser(data);
-      } catch (err) {
-        setLoading(false);
-        console.error('Error fetching user profile:', err);
-        setError('Failed to load user data. Please log in again.');
-      }
-    };
-
-    fetchProfile();
-  }, []);
+  const { skills, name } = useUser().user;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login', { replace: true });
   };
 
-  if (loading || !user) return <Spinner />;
-
-  const skillString = user.skills.join(', ');
+  const skillString = skills.join(', ');
 
   return (
     <div className='min-h-screen bg-gray-100 flex'>
@@ -80,11 +53,11 @@ const Dashboard = () => {
           <div className='flex items-center space-x-6'>
             <div className='relative inline-flex items-center justify-center w-24 h-24 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'>
               <span className=' text-5xl text-gray-600 dark:text-gray-300'>
-                {user.name.substring(0, 1).toUpperCase()}
+                {name.substring(0, 1).toUpperCase()}
               </span>
             </div>{' '}
             <div>
-              <h3 className='text-xl font-semibold'>{user.name}</h3>
+              <h3 className='text-xl font-semibold'>{name}</h3>
               <p className='text-gray-600'>Skills: {skillString}</p>
             </div>
           </div>
@@ -93,8 +66,8 @@ const Dashboard = () => {
         <section className='bg-white rounded-xl p-6 shadow'>
           <h2 className='text-2xl font-bold mb-4'>Skills Offered</h2>
           <ul className='list-disc list-inside text-gray-700 space-y-1'>
-            {user.skills.map(skill => (
-              <li>{skill}</li>
+            {skills.map((skill, idx) => (
+              <li key={idx}>{skill}</li>
             ))}
           </ul>
         </section>

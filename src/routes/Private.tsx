@@ -1,8 +1,7 @@
 import { useAuth } from '@/context/auth/useAuth';
-import Dashboard from '@/dashboard/dashboard';
 import AppLoading from '@/views/AppLoading/AppLoading';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const Private = () => {
   const { user, fetchUser } = useAuth();
@@ -20,7 +19,7 @@ const Private = () => {
     if (!user) fetchUser();
   }, []);
 
-  return user ? <Dashboard /> : <AppLoading />;
+  return user ? <Outlet /> : <AppLoading />;
 };
 
 export default Private;
