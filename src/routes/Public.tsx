@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import appRoutes from './appRoutes';
 
 const Public = () => {
   const { pathname } = useLocation();
@@ -7,7 +8,7 @@ const Public = () => {
   const logged_in_once = localStorage.getItem('logged_in_once');
 
   return token ? (
-    <Navigate to='/dashboard' />
+    <Navigate to={appRoutes.dashboard} />
   ) : !logged_in_once && pathname !== '/' ? (
     <Navigate to='/' />
   ) : (

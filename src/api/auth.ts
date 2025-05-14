@@ -1,37 +1,34 @@
-import { ISignUp } from '@/types/user';
+import { ILogin, ISignUp, IUpdateUser } from '@/types/user';
 import axios from 'axios';
 const BASE_URL = 'https://skills-swap-backend-1.onrender.com';
 
 // Reusable Axios instance
 export const api = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
 // Signup to OTP
 export const signUp = async (data: ISignUp) => {
   const response = await api.post('/auth/signup-to-otp', data);
+
   return response.data;
 };
 
 // Verify OTP
 export const verifyOtp = async (data: {
-  name: string;
-  email: string;
-  contact: string;
-  skills: string[];
-  password: string;
+  userDetails: ISignUp;
   otp: number;
 }) => {
   const response = await api.post('/auth/verifyOtp', data);
-  return response.data.data;
+
+  return response.data;
 };
 
 // Login
-export const login = async (data: { email: string; password: string }) => {
+export const login = async (data: ILogin) => {
   const response = await api.post('/auth/login', data);
+
   return response.data;
 };
 
@@ -49,17 +46,13 @@ export const getUserProfile = async () => {
 };
 
 // Update user details
-export const updateDetails = async (data: {
-  name: string;
-  contact: string;
-  skills: string[];
-}) => {
+export const updateDetails = async (data: IUpdateUser) => {
   const token = localStorage.getItem('token');
+
   const response = await api.put('/user/update', data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   });
+
   return response.data;
 };
 

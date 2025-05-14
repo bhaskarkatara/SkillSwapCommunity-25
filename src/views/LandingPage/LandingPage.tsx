@@ -1,17 +1,18 @@
-import Logo from '../assets/icons/logo.svg';
-import SkillMatching from '../assets/icons/Vector.svg';
-import LiveChat from '../assets/icons/Frame.svg';
-import Certification from '../assets/icons/Frame (1).svg';
-import Community from '../assets/icons/Frame (2).svg';
+import Logo from '../../assets/icons/logo.svg';
+import SkillMatching from '../../assets/icons/Vector.svg';
+import LiveChat from '../../assets/icons/Frame.svg';
+import Certification from '../../assets/icons/Frame (1).svg';
+import Community from '../../assets/icons/Frame (2).svg';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import SkillCard from '@/components/LandingPage/SkillCard';
+import appRoutes from '@/routes/appRoutes';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   function handleSignup() {
-    navigate('/signup');
+    navigate(appRoutes.signup);
   }
 
   useEffect(() => {

@@ -1,8 +1,16 @@
 const appRoutes = {
-  root: { path: '/', name: 'root' },
-  login: { path: '/login', name: 'login' },
-  signup: { path: '/signup', name: 'signup' },
-  home: { path: '/home', name: 'home' },
+  root: '/',
+  login: '/login',
+  signup: '/signup',
+  home: '/home',
+  otp: '/otp',
+  dashboard: '/dashboard',
+  editProfile: '/edit-profile',
+  findSkills: '/find-skills',
+  chats: '/chats',
+  posts: '/posts',
+  profile: '/profile',
+  createSession: '/create-session',
 } as const;
 
 export default appRoutes;

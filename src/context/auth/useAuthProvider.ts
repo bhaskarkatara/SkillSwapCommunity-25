@@ -1,4 +1,5 @@
 import { getUserProfile } from '@/api/auth';
+import appRoutes from '@/routes/appRoutes';
 import { User } from '@/types/user';
 import { useState } from 'react';
 
@@ -21,7 +22,7 @@ const useAuthProvider = () => {
     sessionStorage.clear();
     setUser(null);
 
-    window.location.pathname = '/login';
+    window.location.pathname = appRoutes.login;
   };
 
   return {

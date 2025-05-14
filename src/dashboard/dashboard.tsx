@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/context/auth/useUser';
+import appRoutes from '@/routes/appRoutes';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -7,7 +8,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login', { replace: true });
+    navigate(appRoutes.login, { replace: true });
   };
 
   const skillString = skills.join(', ');
@@ -25,21 +26,30 @@ const Dashboard = () => {
             <i className='fas fa-user'></i>
             <span>My Skills</span>
           </div>
-          <div className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
+            onClick={() => navigate(appRoutes.findSkills)}
+          >
             <i className='fas fa-search'></i>
-            <span onClick={() => navigate('/findSkills')}>Find Skills</span>
+            <span>Find Skills</span>
           </div>
-          <div className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
+            onClick={() => navigate(appRoutes.chats)}
+          >
             <i className='fas fa-comments'></i>
-            <span onClick={() => navigate('/chats')}>Messages</span>
+            <span>Messages</span>
           </div>
-          <div className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
+            onClick={() => navigate(appRoutes.editProfile)}
+          >
             <i className='fas fa-cog'></i>
             <span>Settings</span>
           </div>
           <div
-            onClick={handleLogout}
             className='flex items-center space-x-3 text-gray-700 hover:text-red-500 cursor-pointer'
+            onClick={handleLogout}
           >
             <i className='fa-solid fa-right-from-bracket'></i>
             <span>Log Out</span>

@@ -12,3 +12,10 @@ export type ISignUp = {
   skills: string[];
   password: string;
 };
+
+export type ILogin = {
+  email: string;
+  password: string;
+};
+
+export type IUpdateUser = Omit<User, 'email'>;
