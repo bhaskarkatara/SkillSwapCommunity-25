@@ -4,10 +4,7 @@ import {
   Route,
 } from 'react-router-dom';
 import { RootErrorBoundary } from './RootErrorBoundary';
-import Public from './Public';
-import Private from './Private';
 import NotFound from '../views/NotFound/NotFound';
-import Home from '../LandingPage/landingpage'
 import Dashboard from '../dashboard/dashboard';
 import SkillExchange from '../users/skillsExchange';
 import Chat from '../users/chat';
@@ -18,49 +15,31 @@ import Login from '../users/login';
 import Signup from '../users/signup';
 import OtpPage from '@/users/otpPage';
 import UpdateProfilePage from '@/users/updateDetails';
+import Private from './Private';
+import Public from './Public';
+import LandingPage from '@/LandingPage/LandingPage';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<RootErrorBoundary />}>
       {/* Public Routes */}
-      {/* <Route element={<Public />}>
-        <Route path='/' element={<Public />} />
-      </Route> */}
-      <Route element={<Home />}>
-        <Route path='/' element={<Home />} />
-      </Route>
-      <Route element={<Dashboard />}>
-        <Route path='/dashboard' element={<Dashboard />} />
-      </Route>
-      <Route element={<SkillExchange />}>
-        <Route path='/findSkills' element={<SkillExchange />} />
-      </Route>
-      <Route element={<Chat />}>
-        <Route path='/chats' element={<Chat />} />
-      </Route>
-      <Route element={<Posts />}>
-        <Route path='/post' element={<Posts />} />
-      </Route>
-      <Route element={<Profile />}>
-        <Route path='/profile' element={<Profile />} />
-      </Route>
-      <Route element={<CreateSession />}>
-        <Route path='/createsession' element={<CreateSession />} />
-      </Route>
-      <Route element={<Login />}>
+      <Route element={<Public />}>
+        <Route path='/' element={<LandingPage />} />
         <Route path='/login' element={<Login />} />
-      </Route>
-      <Route element={<Signup />}>
         <Route path='/signup' element={<Signup />} />
-      </Route>
-      <Route element={<OtpPage />}>
         <Route path='/otp' element={<OtpPage />} />
       </Route>
-      <Route element={<UpdateProfilePage />}>
+
+      {/* Private / Protected Routes */}
+      <Route element={<Private />}>
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/findSkills' element={<SkillExchange />} />
+        <Route path='/chats' element={<Chat />} />
+        <Route path='/post' element={<Posts />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/createsession' element={<CreateSession />} />
         <Route path='/update' element={<UpdateProfilePage />} />
       </Route>
-
-      {/* Private Routes */}
-      <Route element={<Private />}></Route>
 
       {/* Not Found Page */}
       <Route path='*' element={<NotFound />} />
