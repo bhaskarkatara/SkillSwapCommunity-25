@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { signupToOtp } from '../api/auth'; // Adjust path as needed
+import { signUp } from '../../../api/auth';
 import Spinner from '@/components/ui/Spinner';
 import toast from 'react-hot-toast';
 import {
@@ -13,47 +12,68 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { useConfig } from '@/context/config/ConfigContext';
+import { ISignUp } from '@/types/user';
+import Input from '@/components/Auth/Input';
 
 const SignupPage = () => {
   const navigate = useNavigate();
+  const { config, loading: configLoading } = useConfig();
 
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [contact, setContact] = useState('');
-  const [skills, setSkills] = useState<string[]>([]);
-  const [skillInput, setSkillInput] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState<ISignUp>({
+    name: '',
+    email: '',
+    contact: '',
+    skills: [],
+    password: '',
+  });
+  const { name, email, contact, skills, password } = formData;
 
   const [open, setOpen] = useState(false);
-  const [allSkills, setAllSkills] = useState(['DSA', 'Chutiyapa', 'Backchodi']);
+  const [skillInput, setSkillInput] = useState('');
+  const [allSkills, setAllSkills] = useState(config.skills);
 
-  const handleAddSkill = (skill: string) => {
-    setSkills(prev => [...prev, skill]);
+  const setFormValue = (label: string, value: string) =>
+    setFormData({ ...formData, [label]: value.trim() });
+
+  const addSkill = (skill: string) => {
+    setFormData({ ...formData, skills: [...formData.skills, skill] });
     setAllSkills(allSkills.filter(val => skill !== val));
-    setOpen(false);
-    setSkillInput('');
   };
 
-  const handleRemoveSkill = (skill: string) => {
-    setSkills(skills.filter(val => skill !== val));
+  const removeSkill = (skill: string) => {
+    setFormData({
+      ...formData,
+      skills: formData.skills.filter(val => skill !== val),
+    });
     setAllSkills(prev => [...prev, skill]);
   };
 
+  useEffect(() => {
+    setAllSkills(config.skills);
+  }, [config.skills.length]);
+
   const handleSignup = async () => {
-    const signupData = { name, email, contact, skills, password };
+    if (name === '' || email === '' || password === '' || contact === '')
+      return toast.error('Please fill in all the details');
+    if (contact.length !== 10)
+      return toast.error('Please enter a valid contact number');
+    if (password.length < 8)
+      return toast.error('password length must be at least 8');
+
     try {
       setLoading(true);
-      const response = await signupToOtp(signupData);
+
+      const response = await signUp(formData);
 
       if (response.success === false) {
         setLoading(false);
         return toast.error(response.message);
       }
 
-      // Optionally store something or show a success message
-      navigate('/otp', { state: signupData });
-      // Redirect to OTP page (update path if needed)
+      navigate('/otp', { state: formData });
+
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -61,47 +81,44 @@ const SignupPage = () => {
     }
   };
 
+  if (configLoading) return <Spinner />;
+
   return (
     <div className='w-full min-h-screen flex items-center justify-center bg-gray-100 py-8'>
       {loading && <Spinner />}
+
       <Card className='w-full max-w-xl shadow-lg rounded-2xl'>
         <CardContent>
           <h1 className='text-3xl font-bold text-center'>Create an Account</h1>
 
           <div className='space-y-4'>
-            <div>
-              <label className='block mb-1 text-sm font-medium'>Name</label>
-              <Input
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder='Enter your name'
-              />
-            </div>
+            <Input
+              label='Name'
+              placeholder='Enter your name'
+              value={name}
+              onChange={(value: string) => setFormValue('name', value)}
+            />
 
-            <div>
-              <label className='block mb-1 text-sm font-medium'>Email</label>
-              <Input
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder='Enter your email'
-                type='email'
-              />
-            </div>
+            <Input
+              label='Email'
+              placeholder='Enter your email'
+              value={email}
+              onChange={(value: string) => setFormValue('email', value)}
+            />
 
-            <div>
-              <label className='block mb-1 text-sm font-medium'>
-                Contact Number
-              </label>
-              <Input
-                maxLength={10}
-                value={contact}
-                onChange={e => setContact(e.target.value.replace(/\D/g, ''))}
-                placeholder='Enter your contact number'
-              />
-            </div>
+            <Input
+              label='Contact Number'
+              placeholder='Enter your contact number'
+              value={contact}
+              onChange={(value: string) =>
+                setFormValue('contact', value.replace(/\D/g, ''))
+              }
+              props={{ maxLength: 10 }}
+            />
 
             <div>
               <label className='block mb-1 text-sm font-medium'>Skills</label>
+
               <div className='flex gap-2 mb-2'>
                 <Command className='border rounded-md mb-2'>
                   <CommandInput
@@ -110,16 +127,20 @@ const SignupPage = () => {
                     onValueChange={setSkillInput}
                     onFocus={() => setOpen(true)}
                   />
+
                   {open && skillInput !== '' && (
-                    <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandEmpty className='py-2 text-center'>
+                      no results found
+                    </CommandEmpty>
                   )}
+
                   {open && (
                     <CommandList>
                       {allSkills.map((skill, index) => (
                         <CommandItem
                           key={index}
                           className='cursor-pointer border rounded-none'
-                          onSelect={() => handleAddSkill(skill)}
+                          onSelect={() => addSkill(skill)}
                         >
                           {skill}
                         </CommandItem>
@@ -138,7 +159,7 @@ const SignupPage = () => {
                     {skill}
                     <button
                       type='button'
-                      onClick={() => handleRemoveSkill(skill)}
+                      onClick={() => removeSkill(skill)}
                       className='cursor-pointer text-lg ml-2 text-blue-500 hover:text-red-500 font-bold'
                     >
                       x
@@ -148,15 +169,12 @@ const SignupPage = () => {
               </div>
             </div>
 
-            <div>
-              <label className='block mb-1 text-sm font-medium'>Password</label>
-              <Input
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder='Enter your password'
-                type='password'
-              />
-            </div>
+            <Input
+              label='Password'
+              placeholder='Enter your password'
+              value={password}
+              onChange={(value: string) => setFormValue('password', value)}
+            />
           </div>
 
           <Button className='w-full mt-4 cursor-pointer' onClick={handleSignup}>
