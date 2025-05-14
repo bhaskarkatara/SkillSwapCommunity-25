@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 import { RootErrorBoundary } from './RootErrorBoundary';
 import NotFound from '../views/NotFound/NotFound';
-import Dashboard from '../dashboard/dashboard';
 import SkillExchange from '../users/skillsExchange';
 import Posts from '../users/post';
 import Profile from '../users/profile';
@@ -19,6 +18,7 @@ import Otp from '@/views/Auth/Otp/Otp.tsx';
 import Chat from '@/views/Chat/Chat.tsx';
 import EditProfile from '@/views/EditProfile/EditProfile.tsx';
 import appRoutes from './appRoutes.ts';
+import Dashboard from '@/views/Dashboard/Dashboard.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
