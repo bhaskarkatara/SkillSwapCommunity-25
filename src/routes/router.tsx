@@ -19,6 +19,7 @@ import Chat from '@/views/Chat/Chat.tsx';
 import EditProfile from '@/views/EditProfile/EditProfile.tsx';
 import appRoutes from './appRoutes.ts';
 import Dashboard from '@/views/Dashboard/Dashboard.tsx';
+import SkillSwapRequests from '@/views/SkillSwapRequests/SkillSwapRequests.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +41,10 @@ const router = createBrowserRouter(
         <Route path={appRoutes.posts} element={<Posts />} />
         <Route path={appRoutes.profile} element={<Profile />} />
         <Route path={appRoutes.createSession} element={<CreateSession />} />
+        <Route
+          path={appRoutes.skillSwapRequests}
+          element={<SkillSwapRequests />}
+        />
       </Route>
 
       {/* Not Found Page */}

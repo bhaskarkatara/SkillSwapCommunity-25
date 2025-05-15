@@ -16,9 +16,12 @@ export default function SideBar() {
             <i className='fas fa-home'></i>
             <span>Home</span>
           </div>
-          <div className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
+            onClick={() => navigate(appRoutes.skillSwapRequests)}
+          >
             <i className='fas fa-user'></i>
-            <span>My Skills</span>
+            <span>My Requests</span>
           </div>
           <div
             className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
