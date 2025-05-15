@@ -22,7 +22,7 @@ export default function FindSkillInput({ onSelect }: any) {
 
   return (
     <div className='flex gap-2 mb-2'>
-      <Command className='border rounded-md mb-2'>
+      <Command className='border rounded-md mb-2 relative overflow-visible'>
         <CommandInput
           placeholder='Search skills...'
           value={skillInput}
@@ -44,11 +44,11 @@ export default function FindSkillInput({ onSelect }: any) {
                   no results found
                 </CommandEmpty>
               )}
-              <CommandList>
+              <CommandList className='absolute w-full bg-white top-8 rounded-sm'>
                 {allSkills.map((skill, index) => (
                   <CommandItem
                     key={index}
-                    className='cursor-pointer border rounded-none'
+                    className='cursor-pointer border rounded-sm'
                     onSelect={() => {
                       onSelect(skill);
                       setSkillInput(skill);

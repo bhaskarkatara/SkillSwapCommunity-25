@@ -11,7 +11,6 @@ const FindSkills = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchedOnce, setSearcedOnce] = useState(false);
-  const [requestedSkill, setRequestedSkill] = useState('');
 
   const [selectedUser, setSelectedUser] = useState<User>();
 
@@ -19,12 +18,10 @@ const FindSkills = () => {
     setLoading(true);
     setUsers([]);
     setSearcedOnce(true);
-    setRequestedSkill('');
 
     try {
       const res = await searchUser(skill);
 
-      setRequestedSkill(skill);
       setUsers(res.data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -42,7 +39,7 @@ const FindSkills = () => {
     <div className=' min-h-screen bg-[#f5f7fa] py-8'>
       <h1 className=' text-center text-5xl font-bold '>Skill Exchange</h1>
 
-      <div className=' max-w-2xl mx-auto mt-4'>
+      <div className=' max-w-3xl mx-auto mt-4'>
         <FindSkillInput onSelect={handleSearch} />
       </div>
 
@@ -55,7 +52,7 @@ const FindSkills = () => {
             : 'Search users with the skills of your interest'}
         </p>
       ) : (
-        <div className='grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 justify-items-center'>
+        <div className='grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 justify-items-center mx-auto'>
           {users.map((user, index) => (
             <UserCard
               key={index}
@@ -68,7 +65,6 @@ const FindSkills = () => {
 
       <RequestSkillSwap
         user={selectedUser}
-        requestedSkill={requestedSkill}
         onClose={() => setSelectedUser(undefined)}
       />
     </div>
