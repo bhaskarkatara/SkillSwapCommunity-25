@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useUser } from '@/context/auth/useUser';
 import { User } from '@/types/user';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -18,19 +17,16 @@ import toast from 'react-hot-toast';
 export default function RequestSkillSwap({
   user,
   onClose,
-  requestedSkill,
 }: {
   user?: User;
   onClose: () => void;
-  requestedSkill: string;
 }) {
-  const { skills } = useUser().user;
-  const [offeredSkill, setOfferedSkill] = useState('');
+  const [requestedSkill, setRequestedSkill] = useState('');
   const [message, setMessage] = useState('');
 
   const onSubmit = async () => {
-    if (offeredSkill === '')
-      return toast.error('Please select a skill you can offer');
+    if (requestedSkill === '')
+      return toast.error('Please select a skill you want to learn');
 
     return toast.error('backend to bna bsdk');
   };
@@ -39,24 +35,23 @@ export default function RequestSkillSwap({
     <Dialog open={user !== undefined} onOpenChange={open => !open && onClose()}>
       <DialogContent className='px-0 py-0'>
         <Card className='border-none shadow-none'>
-          <CardContent className='space-y-4 py-6'>
-            <h2 className='text-xl font-semibold'>Request Skill Swap</h2>
+          <CardContent className='py-0'>
+            <h2 className='text-xl font-semibold mb-1'>Request Skill Swap</h2>
             <p>
               You're requesting{' '}
               <span className='font-medium text-lg italic'>{user?.name}</span>{' '}
-              to teach you{' '}
-              <span className='font-semibold'>{requestedSkill}</span>.
+              to teach you...
             </p>
 
-            <div className='space-y-2'>
-              <Label htmlFor='skill'>Your Skill</Label>
-              <Select onValueChange={setOfferedSkill}>
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Select a skill to offer' />
+            <div className='space-y-2 mt-2'>
+              <Label htmlFor='skill'>Skill</Label>
+              <Select onValueChange={setRequestedSkill}>
+                <SelectTrigger className='w-full cursor-pointer'>
+                  <SelectValue placeholder='Select a skill you want to learn' />
                 </SelectTrigger>
-                <SelectContent>
-                  {skills.map(s => (
-                    <SelectItem key={s} value={s}>
+                <SelectContent className='max-h-64'>
+                  {user?.skills.map(s => (
+                    <SelectItem key={s} value={s} className='cursor-pointer'>
                       {s}
                     </SelectItem>
                   ))}
@@ -64,7 +59,7 @@ export default function RequestSkillSwap({
               </Select>
             </div>
 
-            <div className='space-y-2'>
+            <div className='space-y-2 my-4'>
               <Label htmlFor='message'>Message (optional)</Label>
               <Textarea
                 id='message'
