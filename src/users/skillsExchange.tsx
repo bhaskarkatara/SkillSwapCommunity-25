@@ -1,5 +1,5 @@
+import { searchUser } from '@/api/user';
 import React, { useState } from 'react';
-import { searchUser } from '@/api/auth';
 
 const SkillExchange: React.FC = () => {
   const [skillQuery, setSkillQuery] = useState('');
