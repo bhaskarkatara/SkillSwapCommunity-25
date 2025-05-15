@@ -5,20 +5,26 @@ import { User } from '@/types/user';
 import FindSkillInput from '@/components/FindSkills/FindSkillsInput';
 import UserCard from '@/components/FindSkills/UserCard';
 import { Loader2 } from 'lucide-react';
+import RequestSkillSwap from './RequestSkillSwap';
 
 const FindSkills = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchedOnce, setSearcedOnce] = useState(false);
+  const [requestedSkill, setRequestedSkill] = useState('');
+
+  const [selectedUser, setSelectedUser] = useState<User>();
 
   const handleSearch = async (skill: string) => {
     setLoading(true);
     setUsers([]);
     setSearcedOnce(true);
+    setRequestedSkill('');
 
     try {
       const res = await searchUser(skill);
 
+      setRequestedSkill(skill);
       setUsers(res.data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -47,10 +53,18 @@ const FindSkills = () => {
       ) : (
         <div className='grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 justify-items-center'>
           {users.map((user, index) => (
-            <UserCard key={index} user={user} />
+            <div key={index} onClick={() => setSelectedUser(user)}>
+              <UserCard user={user} />
+            </div>
           ))}
         </div>
       )}
+
+      <RequestSkillSwap
+        user={selectedUser}
+        requestedSkill={requestedSkill}
+        onClose={() => setSelectedUser(undefined)}
+      />
     </div>
   );
 };
