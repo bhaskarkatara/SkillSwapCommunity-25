@@ -12,7 +12,7 @@ const useAuthProvider = () => {
 
       setUser(res);
     } catch (error: any) {
-      // showErrorToast();
+      logout();
     }
   };
 

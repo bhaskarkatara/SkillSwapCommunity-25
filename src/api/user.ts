@@ -27,8 +27,9 @@ export const updateDetails = async (data: IUpdateUser) => {
 export const searchUser = async (skill: string) => {
   const token = localStorage.getItem('token');
 
-  const response = await api.get(`/user/search-user/${skill}`, {
+  const response = await api.get(`/user/search-user`, {
     headers: { Authorization: `Bearer ${token}` },
+    params: { skill },
   });
 
   return response.data;
