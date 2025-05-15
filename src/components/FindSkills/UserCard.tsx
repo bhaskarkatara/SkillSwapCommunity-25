@@ -1,6 +1,12 @@
 import { User } from '@/types/user';
 
-export default function UserCard({ user }: { user: User }) {
+export default function UserCard({
+  user,
+  onClick,
+}: {
+  user: User;
+  onClick: () => void;
+}) {
   const { name, email, contact, skills } = user;
 
   return (
@@ -24,7 +30,10 @@ export default function UserCard({ user }: { user: User }) {
         ))}
       </div>
 
-      <button className='mt-auto py-2 bg-[#3B82F6] text-white rounded-sm cursor-pointer hover:bg-blue-500 border-none'>
+      <button
+        className='mt-auto py-2 bg-[#3B82F6] text-white rounded-sm cursor-pointer hover:bg-blue-500 border-none'
+        onClick={onClick}
+      >
         Request Swap
       </button>
     </div>
