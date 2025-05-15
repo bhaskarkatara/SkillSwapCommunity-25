@@ -1,5 +1,5 @@
 import { searchUser } from '@/api/user';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { User } from '@/types/user';
 import FindSkillInput from '@/components/FindSkills/FindSkillsInput';
@@ -33,6 +33,10 @@ const FindSkills = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    handleSearch('');
+  }, []);
 
   return (
     <div className=' min-h-screen bg-[#f5f7fa] py-8'>
