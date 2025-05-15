@@ -29,34 +29,40 @@ export default function SkillInput({ skills, addSkill, removeSkill }: any) {
           <CommandInput
             placeholder='Search skills...'
             value={skillInput}
-            onValueChange={setSkillInput}
+            onValueChange={(val: string) => {
+              setSkillInput(val);
+              if (val === '') setOpen(false);
+              else if (!open) setOpen(true);
+            }}
             onFocus={() => setOpen(true)}
           />
 
-          {open && configLoading ? (
-            <Loader2 className='h-6 w-6 animate-spin mx-auto my-2' />
-          ) : open && skillInput !== '' ? (
-            <CommandEmpty className='py-2 text-center'>
-              no results found
-            </CommandEmpty>
-          ) : (
-            open && (
-              <CommandList>
-                {allSkills.map((skill, index) => (
-                  <CommandItem
-                    key={index}
-                    className='cursor-pointer border rounded-none'
-                    onSelect={() => {
-                      addSkill(skill);
-                      setAllSkills(allSkills.filter(val => skill !== val));
-                    }}
-                  >
-                    {skill}
-                  </CommandItem>
-                ))}
-              </CommandList>
-            )
-          )}
+          {open &&
+            (configLoading ? (
+              <Loader2 className='h-6 w-6 animate-spin mx-auto my-2' />
+            ) : (
+              <>
+                {skillInput !== '' && (
+                  <CommandEmpty className='py-2 text-center'>
+                    no results found
+                  </CommandEmpty>
+                )}
+                <CommandList>
+                  {allSkills.map((skill, index) => (
+                    <CommandItem
+                      key={index}
+                      className='cursor-pointer border rounded-none'
+                      onSelect={() => {
+                        addSkill(skill);
+                        setAllSkills(allSkills.filter(val => skill !== val));
+                      }}
+                    >
+                      {skill}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </>
+            ))}
         </Command>
       </div>
 

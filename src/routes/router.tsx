@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import { RootErrorBoundary } from './RootErrorBoundary';
 import NotFound from '../views/NotFound/NotFound';
-import SkillExchange from '../users/skillsExchange';
+import FindSkills from '@/views/FindSkills/FindSkills.tsx';
 import Posts from '../users/post';
 import Profile from '../users/profile';
 import CreateSession from '../users/CreateSession';
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
       <Route element={<Private />}>
         <Route path={appRoutes.dashboard} element={<Dashboard />} />
         <Route path={appRoutes.editProfile} element={<EditProfile />} />
-        <Route path={appRoutes.findSkills} element={<SkillExchange />} />
+        <Route path={appRoutes.findSkills} element={<FindSkills />} />
         <Route path={appRoutes.chats} element={<Chat />} />
         <Route path={appRoutes.posts} element={<Posts />} />
         <Route path={appRoutes.profile} element={<Profile />} />
