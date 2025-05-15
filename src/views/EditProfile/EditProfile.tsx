@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { updateDetails } from '@/api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/context/auth/useUser';
 import { useConfig } from '@/context/config/ConfigContext';
@@ -8,6 +7,7 @@ import SkillInput from '@/components/SkillInput';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import Spinner from '@/components/ui/Spinner';
+import { updateDetails } from '@/api/user';
 
 const EditProfile = () => {
   const navigate = useNavigate();

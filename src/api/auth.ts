@@ -1,4 +1,4 @@
-import { ILogin, ISignUp, IUpdateUser } from '@/types/user';
+import { ILogin, ISignUp } from '@/types/user';
 import axios from 'axios';
 const BASE_URL = 'https://skills-swap-backend-1.onrender.com';
 
@@ -29,40 +29,5 @@ export const verifyOtp = async (data: {
 export const login = async (data: ILogin) => {
   const response = await api.post('/auth/login', data);
 
-  return response.data;
-};
-
-// Get user profile
-export const getUserProfile = async () => {
-  const token = localStorage.getItem('token');
-
-  const response = await api.get('/user/profile', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-};
-
-// Update user details
-export const updateDetails = async (data: IUpdateUser) => {
-  const token = localStorage.getItem('token');
-
-  const response = await api.put('/user/update', data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  return response.data;
-};
-
-// 🔧 Fix: Add headers to search-user to avoid CORS issues
-export const searchUser = async (skill: string) => {
-  const token = localStorage.getItem('token');
-  const response = await api.get(`/user/search-user/${skill}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
   return response.data;
 };

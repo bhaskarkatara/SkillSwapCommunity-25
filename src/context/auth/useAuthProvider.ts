@@ -1,4 +1,4 @@
-import { getUserProfile } from '@/api/auth';
+import { getUserProfile } from '@/api/user';
 import appRoutes from '@/routes/appRoutes';
 import { User } from '@/types/user';
 import { useState } from 'react';
