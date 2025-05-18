@@ -7,7 +7,6 @@ import { RootErrorBoundary } from './RootErrorBoundary';
 import NotFound from '../views/NotFound/NotFound';
 import FindSkills from '@/views/FindSkills/FindSkills.tsx';
 import Posts from '../users/post';
-import Profile from '../users/profile';
 import CreateSession from '../users/CreateSession';
 import Login from '../views/Auth/Login/Login.tsx';
 import Signup from '../views/Auth/Signup/Signup.tsx';
@@ -20,6 +19,7 @@ import EditProfile from '@/views/EditProfile/EditProfile.tsx';
 import appRoutes from './appRoutes.ts';
 import Dashboard from '@/views/Dashboard/Dashboard.tsx';
 import SkillSwapRequests from '@/views/SkillSwapRequests/SkillSwapRequests.tsx';
+import Profile from '@/views/Profile/Profile.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,8 +39,8 @@ const router = createBrowserRouter(
         <Route path={appRoutes.findSkills} element={<FindSkills />} />
         <Route path={appRoutes.chats} element={<Chat />} />
         <Route path={appRoutes.posts} element={<Posts />} />
-        <Route path={appRoutes.profile} element={<Profile />} />
         <Route path={appRoutes.createSession} element={<CreateSession />} />
+        <Route path={appRoutes.userProfile} element={<Profile />} />
         <Route
           path={appRoutes.skillSwapRequests}
           element={<SkillSwapRequests />}

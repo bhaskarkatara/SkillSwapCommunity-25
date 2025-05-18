@@ -34,3 +34,15 @@ export const searchUser = async (skill: string) => {
 
   return response.data;
 };
+
+// Fetch other user profile
+export const fetchUserProfile = async (email: string) => {
+  const token = localStorage.getItem('token');
+
+  const response = await api.get(`/user/get-someone-profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+    params: { email },
+  });
+
+  return response.data;
+};

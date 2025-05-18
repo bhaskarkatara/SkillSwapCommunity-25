@@ -63,10 +63,12 @@ const FindSkills = () => {
         </div>
       )}
 
-      <RequestSkillSwap
-        user={selectedUser}
-        onClose={() => setSelectedUser(undefined)}
-      />
+      {selectedUser && (
+        <RequestSkillSwap
+          user={selectedUser}
+          onClose={() => setSelectedUser(undefined)}
+        />
+      )}
     </div>
   );
 };
