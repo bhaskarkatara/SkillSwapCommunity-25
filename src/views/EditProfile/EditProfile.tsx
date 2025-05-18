@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/context/auth/useUser';
-import { useConfig } from '@/context/config/ConfigContext';
 import Input from '@/components/Auth/Input';
 import SkillInput from '@/components/SkillInput';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import Spinner from '@/components/ui/Spinner';
 import { updateDetails } from '@/api/user';
+import appRoutes from '@/routes/appRoutes';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -40,6 +40,7 @@ const EditProfile = () => {
       await fetchUser();
       setLoading(false);
       toast.success('Profile updated successfully!');
+      navigate(appRoutes.dashboard);
     } catch (err) {
       setLoading(false);
       console.error('Error updating profile:', err);

@@ -18,6 +18,7 @@ const useAuthProvider = () => {
 
       setUser(res.data);
     } catch (error: any) {
+      toast.error('something went wrong. failed to fetch user profile.');
       logout();
     }
   };

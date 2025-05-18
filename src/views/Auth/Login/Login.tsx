@@ -38,7 +38,7 @@ const Login = () => {
     } catch (err) {
       console.log(err);
       setLoading(false);
-      toast.error('something went wrong');
+      toast.error('something went wrong. unable to login.');
     }
   };
 

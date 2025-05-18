@@ -12,7 +12,10 @@ export default function SideBar() {
       <aside className='w-64 bg-white p-6 shadow-md'>
         <h1 className='text-2xl font-bold mb-8'>Dashboard</h1>
         <nav className='space-y-6'>
-          <div className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
+            onClick={() => navigate(appRoutes.dashboard)}
+          >
             <i className='fas fa-home'></i>
             <span>Home</span>
           </div>

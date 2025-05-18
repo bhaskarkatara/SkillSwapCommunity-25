@@ -17,7 +17,7 @@ export default function SkillInput({ skills, addSkill, removeSkill }: any) {
 
   const [allSkills, setAllSkills] = useState(config.skills);
   useEffect(() => {
-    setAllSkills(config.skills);
+    setAllSkills(config.skills.filter(skill => !skills.includes(skill)));
   }, [config.skills.length]);
 
   return (
