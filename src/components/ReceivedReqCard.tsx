@@ -3,14 +3,12 @@ import { Button } from './ui/button';
 import ReqCardSkillInput from './ReqCardSkillInput';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { ISwapRequest } from '@/types/swal-request';
 
-export default function ReceivedReqCard({ req }: any) {
+export default function ReceivedReqCard({ req }: { req: ISwapRequest }) {
   const {
-    sender,
-    status,
-    senderOfferedSkill,
-    receiverOfferedSkill,
-    additional_note,
+    senderDetails: sender,
+    request: { message, status, offeredSkill, requestedSkill },
   } = req;
   const [selectedSkill, setSeletedSkill] = useState('');
 
@@ -45,7 +43,7 @@ export default function ReceivedReqCard({ req }: any) {
         <span className=' font-semibold text-base'>
           Skill he want to learn:{' '}
         </span>
-        {receiverOfferedSkill}
+        {requestedSkill}
       </div>
 
       {status === 'pending' && (
@@ -68,16 +66,16 @@ export default function ReceivedReqCard({ req }: any) {
           <span className=' font-semibold text-base'>
             Skill you want to learn:{' '}
           </span>
-          {senderOfferedSkill}
+          {offeredSkill}
         </div>
       )}
 
-      {additional_note && additional_note !== '' && (
+      {message !== '' && (
         <div className='text-left text-sm my-2'>
           <span className=' font-semibold text-base'>
             Note from their side: <br />
           </span>
-          {additional_note}
+          {message}
         </div>
       )}
 

@@ -1,12 +1,10 @@
+import { ISwapRequest } from '@/types/swal-request';
 import { Badge } from './ui/badge';
 
-export default function SentReqCard({ req }: any) {
+export default function SentReqCard({ req }: { req: ISwapRequest }) {
   const {
-    receiver,
-    status,
-    senderOfferedSkill,
-    receiverOfferedSkill,
-    additional_note,
+    receiverDetails: receiver,
+    request: { message, status, requestedSkill, offeredSkill },
   } = req;
 
   const bg =
@@ -15,6 +13,7 @@ export default function SentReqCard({ req }: any) {
       : status === 'accepted'
         ? '#48BB78'
         : '#F56565';
+
   const label =
     status === 'pending'
       ? 'Pending'
@@ -40,7 +39,7 @@ export default function SentReqCard({ req }: any) {
         <span className=' font-semibold text-base'>
           Skill you want to learn:{' '}
         </span>
-        {receiverOfferedSkill}
+        {requestedSkill}
       </div>
 
       {status === 'accepted' && (
@@ -48,16 +47,16 @@ export default function SentReqCard({ req }: any) {
           <span className=' font-semibold text-base'>
             Skill he want to learn:{' '}
           </span>
-          {senderOfferedSkill}
+          {offeredSkill}
         </div>
       )}
 
-      {additional_note && additional_note !== '' && (
+      {message !== '' && (
         <div className='text-left text-sm mt-2'>
           <span className=' font-semibold text-base'>
             Note from your side: <br />
           </span>
-          {additional_note}
+          {message}
         </div>
       )}
 

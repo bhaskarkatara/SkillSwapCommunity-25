@@ -1,4 +1,4 @@
-import { requestSkillSwap } from '@/api/skills';
+import { requestSkillSwap } from '@/api/swap-request';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
