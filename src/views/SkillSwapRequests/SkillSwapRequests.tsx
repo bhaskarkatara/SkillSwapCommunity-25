@@ -86,7 +86,7 @@ const SkillSwapRequests = () => {
             ) : sent.length === 0 ? (
               <p className='text-muted-foreground'>No sent requests yet.</p>
             ) : (
-              sent.map(req => <SentReqCard req={req} />)
+              sent.map(req => <SentReqCard req={req} key={req.request.id} />)
             )}
           </div>
         </TabsContent>
@@ -99,7 +99,11 @@ const SkillSwapRequests = () => {
               <p className='text-muted-foreground'>No received requests yet.</p>
             ) : (
               received.map(req => (
-                <ReceivedReqCard req={req} onAction={handleAcceptReject} />
+                <ReceivedReqCard
+                  req={req}
+                  onAction={handleAcceptReject}
+                  key={req.request.id}
+                />
               ))
             )}
           </div>
