@@ -14,57 +14,47 @@ const SkillSwapRequests = () => {
   const [received, setReceived] = useState<ISwapRequest[]>([]);
   const [receivedLoading, setReceivedLoading] = useState(false);
 
+  const fetchSent = async () => {
+    try {
+      setSentLoading(true);
+
+      const res = await fetchSentRequests();
+
+      if (!res.success) {
+        return toast.error(res.message);
+      }
+
+      setSent(res.data);
+      setSentLoading(false);
+    } catch (err) {
+      setSentLoading(false);
+      toast.error('something went wrong');
+      console.error(err);
+    }
+  };
+  const fetchReceived = async () => {
+    try {
+      setReceivedLoading(true);
+
+      const res = await fetchReceivedRequests();
+
+      if (!res.success) {
+        return toast.error(res.message);
+      }
+
+      setReceived(res.data);
+      setReceivedLoading(false);
+    } catch (err) {
+      setReceivedLoading(false);
+      toast.error('something went wrong');
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchSent = async () => {
-      try {
-        setSentLoading(true);
-
-        const res = await fetchSentRequests();
-
-        if (!res.success) {
-          return toast.error(res.message);
-        }
-
-        setSent(res.data);
-        setSentLoading(false);
-      } catch (err) {
-        setSentLoading(false);
-        toast.error('something went wrong');
-        console.error(err);
-      }
-    };
-    const fetchReceived = async () => {
-      try {
-        setReceivedLoading(true);
-
-        const res = await fetchReceivedRequests();
-
-        if (!res.success) {
-          return toast.error(res.message);
-        }
-
-        setReceived(res.data);
-        setReceivedLoading(false);
-      } catch (err) {
-        setReceivedLoading(false);
-        toast.error('something went wrong');
-        console.error(err);
-      }
-    };
-
     fetchSent();
     fetchReceived();
   }, []);
-
-  const handleAccept = (id: string) => {
-    // Call accept API
-    console.log('Accepted', id);
-  };
-
-  const handleReject = (id: string) => {
-    // Call reject API
-    console.log('Rejected', id);
-  };
 
   return (
     <div className='max-w-2xl mx-auto p-6'>
@@ -102,7 +92,9 @@ const SkillSwapRequests = () => {
             ) : received.length === 0 ? (
               <p className='text-muted-foreground'>No received requests yet.</p>
             ) : (
-              received.map(req => <ReceivedReqCard req={req} />)
+              received.map(req => (
+                <ReceivedReqCard req={req} onAction={fetchReceived} />
+              ))
             )}
           </div>
         </TabsContent>

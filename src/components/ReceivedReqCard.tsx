@@ -4,26 +4,75 @@ import ReqCardSkillInput from './ReqCardSkillInput';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { ISwapRequest } from '@/types/swal-request';
+import { acceptRequest, rejectRequest } from '@/api/swap-request';
+import { Loader2 } from 'lucide-react';
 
-export default function ReceivedReqCard({ req }: { req: ISwapRequest }) {
+export default function ReceivedReqCard({
+  req,
+  onAction,
+}: {
+  req: ISwapRequest;
+  onAction: any;
+}) {
   const {
     senderDetails: sender,
-    request: { message, status, offeredSkill, requestedSkill },
+    request: { id, message, status, offeredSkill, requestedSkill },
   } = req;
   const [selectedSkill, setSeletedSkill] = useState('');
+  const [loading, setLoading] = useState(0);
 
   const bg =
     status === 'pending'
       ? '#F6E05E'
-      : status === 'accepted'
+      : status === 'Accepted'
         ? '#48BB78'
         : '#F56565';
   const label =
     status === 'pending'
       ? 'Pending'
-      : status === 'accepted'
+      : status === 'Accepted'
         ? 'Accepted'
         : 'Rejected';
+
+  const handleAccept = async () => {
+    if (selectedSkill === '')
+      return toast.error(
+        'Please select a skill that you want to learn in return.',
+      );
+    try {
+      setLoading(1);
+
+      const res = await acceptRequest(id, selectedSkill);
+
+      if (!res.success) return toast.error(res.message);
+
+      toast.success(res.message);
+      setLoading(0);
+      onAction();
+    } catch (err) {
+      console.error(err);
+      setLoading(0);
+      toast.error('Something went wrong. unable to accept the request.');
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      setLoading(2);
+
+      const res = await rejectRequest(id);
+
+      if (!res.success) return toast.error(res.message);
+
+      toast.success(res.message);
+      setLoading(0);
+      onAction();
+    } catch (err) {
+      console.error(err);
+      setLoading(0);
+      toast.error('Something went wrong. unable to reject the request.');
+    }
+  };
 
   return (
     <div className='bg-white p-5 rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.1)] w-full text-center flex flex-col'>
@@ -89,19 +138,29 @@ export default function ReceivedReqCard({ req }: { req: ISwapRequest }) {
       ) : (
         <div className='flex gap-3 pt-2'>
           <Button
-            onClick={() => toast.error('Backend to bana chutiye')}
+            onClick={handleAccept}
             size='sm'
             className='cursor-pointer'
+            disabled={loading !== 0}
           >
-            Accept
+            {loading === 1 ? (
+              <Loader2 className='h-6 w-6 animate-spin mx-auto my-2' />
+            ) : (
+              'Accept'
+            )}
           </Button>
           <Button
-            onClick={() => toast.error('Backend to bana chutiye')}
+            onClick={handleReject}
             variant='outline'
             size='sm'
             className='cursor-pointer'
+            disabled={loading !== 0}
           >
-            Reject
+            {loading === 2 ? (
+              <Loader2 className='h-6 w-6 animate-spin mx-auto my-2' />
+            ) : (
+              'Reject'
+            )}
           </Button>
         </div>
       )}
