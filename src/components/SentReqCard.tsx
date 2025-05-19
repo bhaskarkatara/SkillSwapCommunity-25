@@ -10,14 +10,14 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
   const bg =
     status === 'pending'
       ? '#F6E05E'
-      : status === 'accepted'
+      : status === 'Accepted'
         ? '#48BB78'
         : '#F56565';
 
   const label =
     status === 'pending'
       ? 'Pending'
-      : status === 'accepted'
+      : status === 'Accepted'
         ? 'Accepted'
         : 'Rejected';
 
