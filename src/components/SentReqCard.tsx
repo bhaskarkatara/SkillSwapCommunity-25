@@ -1,18 +1,21 @@
 import { ISwapRequest } from '@/types/swal-request';
 import { Badge } from './ui/badge';
+import { useNavigate } from 'react-router-dom';
+import appRoutes from '@/routes/appRoutes';
 
 export default function SentReqCard({ req }: { req: ISwapRequest }) {
+  const navigate = useNavigate();
   const {
     receiverDetails: receiver,
     request: { message, status, requestedSkill, offeredSkill },
   } = req;
 
-  const bg =
+  const bgClass =
     status === 'pending'
-      ? 'yellow-400'
+      ? 'bg-yellow-400'
       : status === 'Accepted'
-        ? 'green-400'
-        : 'red-400';
+        ? 'bg-green-400'
+        : 'bg-red-400';
 
   const label =
     status === 'pending'
@@ -24,7 +27,12 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
   return (
     <div className='bg-white p-5 rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.1)] w-full text-center flex flex-col'>
       <div className='flex text-left gap-4 items-center'>
-        <div className='w-12 h-12 bg-[#ddd] rounded-full flex items-center justify-center text-3xl text-[#555] font-bold'>
+        <div
+          className='w-12 h-12 bg-[#ddd] rounded-full flex items-center justify-center text-3xl text-[#555] font-bold cursor-pointer'
+          onClick={() =>
+            navigate(appRoutes.userProfile, { state: receiver.email })
+          }
+        >
           {receiver.name.split(' ')[0]?.[0]?.toUpperCase()}
         </div>
 
@@ -61,7 +69,7 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
       )}
 
       <Badge
-        className={`mt-4 w-full py-2 font-semibold bg-${bg}`}
+        className={`mt-4 w-full py-2 font-semibold ${bgClass}`}
         variant='secondary'
       >
         {label}

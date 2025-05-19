@@ -6,6 +6,8 @@ import toast from 'react-hot-toast';
 import { ISwapRequest } from '@/types/swal-request';
 import { acceptRequest, rejectRequest } from '@/api/swap-request';
 import { Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import appRoutes from '@/routes/appRoutes';
 
 export default function ReceivedReqCard({
   req,
@@ -14,6 +16,7 @@ export default function ReceivedReqCard({
   req: ISwapRequest;
   onAction: any;
 }) {
+  const navigate = useNavigate();
   const {
     senderDetails: sender,
     request: { id, message, status, offeredSkill, requestedSkill },
@@ -21,7 +24,7 @@ export default function ReceivedReqCard({
   const [selectedSkill, setSeletedSkill] = useState('');
   const [loading, setLoading] = useState(0);
 
-  const bg = status === 'Accepted' ? 'green-400' : 'red-400';
+  const bgClass = status === 'Accepted' ? 'bg-green-400' : 'bg-red-400';
 
   const label =
     status === 'pending'
@@ -71,7 +74,12 @@ export default function ReceivedReqCard({
   return (
     <div className='bg-white p-5 rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.1)] w-full text-center flex flex-col'>
       <div className='flex text-left gap-4 items-center'>
-        <div className='w-12 h-12 bg-[#ddd] rounded-full flex items-center justify-center text-3xl text-[#555] font-bold'>
+        <div
+          className='w-12 h-12 bg-[#ddd] rounded-full flex items-center justify-center text-3xl text-[#555] font-bold cursor-pointer'
+          onClick={() => {
+            navigate(appRoutes.userProfile, { state: sender.email });
+          }}
+        >
           {sender.name.split(' ')[0]?.[0]?.toUpperCase()}
         </div>
 
@@ -123,7 +131,9 @@ export default function ReceivedReqCard({
       )}
 
       {status !== 'pending' ? (
-        <Badge className={`mt-2 w-full py-2 font-semibold bg-${bg} text-black`}>
+        <Badge
+          className={`mt-2 w-full py-2 font-semibold ${bgClass} text-black`}
+        >
           {label}
         </Badge>
       ) : (
