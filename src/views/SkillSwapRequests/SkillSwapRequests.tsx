@@ -2,7 +2,7 @@ import { fetchReceivedRequests, fetchSentRequests } from '@/api/swap-request';
 import ReceivedReqCard from '@/components/ReceivedReqCard';
 import SentReqCard from '@/components/SentReqCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ISwapRequest } from '@/types/swal-request';
+import { IRequest, ISwapRequest } from '@/types/swal-request';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -14,47 +14,53 @@ const SkillSwapRequests = () => {
   const [received, setReceived] = useState<ISwapRequest[]>([]);
   const [receivedLoading, setReceivedLoading] = useState(false);
 
-  const fetchSent = async () => {
-    try {
-      setSentLoading(true);
-
-      const res = await fetchSentRequests();
-
-      if (!res.success) {
-        return toast.error(res.message);
-      }
-
-      setSent(res.data);
-      setSentLoading(false);
-    } catch (err) {
-      setSentLoading(false);
-      toast.error('something went wrong');
-      console.error(err);
-    }
-  };
-  const fetchReceived = async () => {
-    try {
-      setReceivedLoading(true);
-
-      const res = await fetchReceivedRequests();
-
-      if (!res.success) {
-        return toast.error(res.message);
-      }
-
-      setReceived(res.data);
-      setReceivedLoading(false);
-    } catch (err) {
-      setReceivedLoading(false);
-      toast.error('something went wrong');
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
+    const fetchSent = async () => {
+      try {
+        setSentLoading(true);
+
+        const res = await fetchSentRequests();
+
+        if (!res.success) {
+          return toast.error(res.message);
+        }
+
+        setSent(res.data);
+        setSentLoading(false);
+      } catch (err) {
+        setSentLoading(false);
+        toast.error('something went wrong');
+        console.error(err);
+      }
+    };
+    const fetchReceived = async () => {
+      try {
+        setReceivedLoading(true);
+
+        const res = await fetchReceivedRequests();
+
+        if (!res.success) {
+          return toast.error(res.message);
+        }
+
+        setReceived(res.data);
+        setReceivedLoading(false);
+      } catch (err) {
+        setReceivedLoading(false);
+        toast.error('something went wrong');
+        console.error(err);
+      }
+    };
+
     fetchSent();
     fetchReceived();
   }, []);
+
+  const handleAcceptReject = (req: IRequest) => {
+    setReceived(prev =>
+      prev.map(p => (p.request.id !== req.id ? p : { ...p, request: req })),
+    );
+  };
 
   return (
     <div className='max-w-2xl mx-auto p-6'>
@@ -93,7 +99,7 @@ const SkillSwapRequests = () => {
               <p className='text-muted-foreground'>No received requests yet.</p>
             ) : (
               received.map(req => (
-                <ReceivedReqCard req={req} onAction={fetchReceived} />
+                <ReceivedReqCard req={req} onAction={handleAcceptReject} />
               ))
             )}
           </div>

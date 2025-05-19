@@ -21,12 +21,8 @@ export default function ReceivedReqCard({
   const [selectedSkill, setSeletedSkill] = useState('');
   const [loading, setLoading] = useState(0);
 
-  const bg =
-    status === 'pending'
-      ? '#F6E05E'
-      : status === 'Accepted'
-        ? '#48BB78'
-        : '#F56565';
+  const bg = status === 'Accepted' ? 'green-400' : 'red-400';
+
   const label =
     status === 'pending'
       ? 'Pending'
@@ -46,9 +42,8 @@ export default function ReceivedReqCard({
 
       if (!res.success) return toast.error(res.message);
 
-      toast.success(res.message);
       setLoading(0);
-      onAction();
+      onAction(res.data);
     } catch (err) {
       console.error(err);
       setLoading(0);
@@ -64,9 +59,8 @@ export default function ReceivedReqCard({
 
       if (!res.success) return toast.error(res.message);
 
-      toast.success(res.message);
       setLoading(0);
-      onAction();
+      onAction(res.data);
     } catch (err) {
       console.error(err);
       setLoading(0);
@@ -129,10 +123,7 @@ export default function ReceivedReqCard({
       )}
 
       {status !== 'pending' ? (
-        <Badge
-          className={`mt-2 w-full py-2 font-semibold bg-[${bg}]`}
-          variant='secondary'
-        >
+        <Badge className={`mt-2 w-full py-2 font-semibold bg-${bg} text-black`}>
           {label}
         </Badge>
       ) : (

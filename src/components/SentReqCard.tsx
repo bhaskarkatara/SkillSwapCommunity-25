@@ -9,10 +9,10 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
 
   const bg =
     status === 'pending'
-      ? '#F6E05E'
+      ? 'yellow-400'
       : status === 'Accepted'
-        ? '#48BB78'
-        : '#F56565';
+        ? 'green-400'
+        : 'red-400';
 
   const label =
     status === 'pending'
@@ -61,7 +61,7 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
       )}
 
       <Badge
-        className={`mt-4 w-full py-2 font-semibold bg-[${bg}]`}
+        className={`mt-4 w-full py-2 font-semibold bg-${bg}`}
         variant='secondary'
       >
         {label}
