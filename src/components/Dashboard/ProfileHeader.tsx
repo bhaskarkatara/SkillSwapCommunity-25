@@ -55,7 +55,7 @@ export default function ProfileHeader({ user }: { user: User }) {
               <img
                 src={Instagram}
                 alt='instagram'
-                className='cursor-pointer h-6'
+                className='object-contain max-w-6'
               />
             </a>
           )}
