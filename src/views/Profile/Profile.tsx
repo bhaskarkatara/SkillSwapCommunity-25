@@ -58,7 +58,7 @@ const Profile = () => {
         </main>
       ) : (
         <main className='flex-1 p-8 space-y-8'>
-          <ProfileHeader name={user.name} skills={user.skills} />
+          <ProfileHeader user={user} />
 
           <Badges />
 

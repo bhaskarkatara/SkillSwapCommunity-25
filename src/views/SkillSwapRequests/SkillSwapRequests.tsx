@@ -1,6 +1,7 @@
 import { fetchReceivedRequests, fetchSentRequests } from '@/api/swap-request';
 import ReceivedReqCard from '@/components/ReceivedReqCard';
 import SentReqCard from '@/components/SentReqCard';
+import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IRequest, ISwapRequest } from '@/types/swal-request';
 import { Loader2 } from 'lucide-react';
@@ -9,9 +10,11 @@ import toast from 'react-hot-toast';
 
 const SkillSwapRequests = () => {
   const [sent, setSent] = useState<ISwapRequest[]>([]);
+  const [filteredSent, setFilteredSent] = useState<ISwapRequest[]>([]);
   const [sentLoading, setSentLoading] = useState(false);
 
   const [received, setReceived] = useState<ISwapRequest[]>([]);
+  const [filteredReceived, setFilteredReceived] = useState<ISwapRequest[]>([]);
   const [receivedLoading, setReceivedLoading] = useState(false);
 
   useEffect(() => {
@@ -26,6 +29,7 @@ const SkillSwapRequests = () => {
         }
 
         setSent(res.data);
+        setFilteredSent(res.data);
         setSentLoading(false);
       } catch (err) {
         setSentLoading(false);
@@ -44,6 +48,7 @@ const SkillSwapRequests = () => {
         }
 
         setReceived(res.data);
+        setFilteredReceived(res.data);
         setReceivedLoading(false);
       } catch (err) {
         setReceivedLoading(false);
@@ -59,6 +64,35 @@ const SkillSwapRequests = () => {
   const handleAcceptReject = (req: IRequest) => {
     setReceived(prev =>
       prev.map(p => (p.request.id !== req.id ? p : { ...p, request: req })),
+    );
+  };
+
+  const filters = ['Pending', 'Accepted', 'Rejected'];
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  const onToggle = (filter: string) => {
+    const updatedSelectedFilters = selectedFilters.includes(filter)
+      ? selectedFilters.filter(f => f != filter)
+      : [...selectedFilters, filter];
+
+    setSelectedFilters(updatedSelectedFilters);
+
+    setFilteredSent(
+      sent.filter(req => {
+        return (
+          updatedSelectedFilters.length === 0 ||
+          updatedSelectedFilters.includes(req.request.status)
+        );
+      }),
+    );
+
+    setFilteredReceived(
+      received.filter(req => {
+        return (
+          updatedSelectedFilters.length === 0 ||
+          updatedSelectedFilters.includes(req.request.status)
+        );
+      }),
     );
   };
 
@@ -80,33 +114,77 @@ const SkillSwapRequests = () => {
         </TabsList>
 
         <TabsContent value='sent'>
-          <div className='space-y-4'>
-            {sentLoading ? (
-              <Loader2 className='h-12 w-12 animate-spin mx-auto my-2' />
-            ) : sent.length === 0 ? (
-              <p className='text-muted-foreground'>No sent requests yet.</p>
-            ) : (
-              sent.map(req => <SentReqCard req={req} key={req.request.id} />)
-            )}
-          </div>
+          <>
+            <div className='flex gap-4 px-8 pb-8 items-center'>
+              <div>Show:</div>
+
+              <div className='flex gap-4 items-center'>
+                {filters.map(filter => (
+                  <div className='flex gap-1 items-center' key={filter}>
+                    <input
+                      type='checkbox'
+                      id={filter}
+                      checked={selectedFilters.includes(filter)}
+                      onChange={() => onToggle(filter)}
+                    />
+                    <Label htmlFor={filter}>{filter}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className='space-y-4'>
+              {sentLoading ? (
+                <Loader2 className='h-12 w-12 animate-spin mx-auto my-2' />
+              ) : filteredSent.length === 0 ? (
+                <p className='text-muted-foreground'>No sent requests yet.</p>
+              ) : (
+                filteredSent.map(req => (
+                  <SentReqCard req={req} key={req.request.id} />
+                ))
+              )}
+            </div>
+          </>
         </TabsContent>
 
         <TabsContent value='received'>
-          <div className='space-y-4'>
-            {receivedLoading ? (
-              <Loader2 className='h-12 w-12 animate-spin mx-auto my-2' />
-            ) : received.length === 0 ? (
-              <p className='text-muted-foreground'>No received requests yet.</p>
-            ) : (
-              received.map(req => (
-                <ReceivedReqCard
-                  req={req}
-                  onAction={handleAcceptReject}
-                  key={req.request.id}
-                />
-              ))
-            )}
-          </div>
+          <>
+            <div className='flex gap-4 px-8 pb-8 items-center'>
+              <div>Show:</div>
+
+              <div className='flex gap-4 items-center'>
+                {filters.map(filter => (
+                  <div className='flex gap-1 items-center' key={filter}>
+                    <input
+                      type='checkbox'
+                      id={filter}
+                      checked={selectedFilters.includes(filter)}
+                      onChange={() => onToggle(filter)}
+                    />
+                    <Label htmlFor={filter}>{filter}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className='space-y-4'>
+              {receivedLoading ? (
+                <Loader2 className='h-12 w-12 animate-spin mx-auto my-2' />
+              ) : filteredReceived.length === 0 ? (
+                <p className='text-muted-foreground'>
+                  No received requests yet.
+                </p>
+              ) : (
+                filteredReceived.map(req => (
+                  <ReceivedReqCard
+                    req={req}
+                    onAction={handleAcceptReject}
+                    key={req.request.id}
+                  />
+                ))
+              )}
+            </div>
+          </>
         </TabsContent>
       </Tabs>
     </div>

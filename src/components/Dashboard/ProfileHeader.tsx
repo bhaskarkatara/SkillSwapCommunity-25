@@ -44,6 +44,12 @@ export default function ProfileHeader({ user }: { user: User }) {
             </a>
           )}
 
+          {linkedinLink && (
+            <a href={linkedinLink} target='_blank'>
+              <Linkedin />
+            </a>
+          )}
+
           {instagramLink && (
             <a href={instagramLink} target='_blank' title='Instagram'>
               <img
@@ -51,12 +57,6 @@ export default function ProfileHeader({ user }: { user: User }) {
                 alt='instagram'
                 className='cursor-pointer h-6'
               />
-            </a>
-          )}
-
-          {linkedinLink && (
-            <a href={linkedinLink} target='_blank'>
-              <Linkedin />
             </a>
           )}
         </div>
