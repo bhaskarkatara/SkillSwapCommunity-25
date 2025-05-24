@@ -26,13 +26,6 @@ export default function ReceivedReqCard({
 
   const bgClass = status === 'Accepted' ? 'bg-green-400' : 'bg-red-400';
 
-  const label =
-    status === 'pending'
-      ? 'Pending'
-      : status === 'Accepted'
-        ? 'Accepted'
-        : 'Rejected';
-
   const handleAccept = async () => {
     if (selectedSkill === '')
       return toast.error(
@@ -134,7 +127,7 @@ export default function ReceivedReqCard({
         <Badge
           className={`mt-2 w-full py-2 font-semibold ${bgClass} text-black`}
         >
-          {label}
+          {status}
         </Badge>
       ) : (
         <div className='flex gap-3 pt-2'>

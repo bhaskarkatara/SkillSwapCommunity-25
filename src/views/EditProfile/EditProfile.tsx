@@ -8,29 +8,36 @@ import toast from 'react-hot-toast';
 import Spinner from '@/components/ui/Spinner';
 import { updateDetails } from '@/api/user';
 import appRoutes from '@/routes/appRoutes';
+import { IUpdateUser } from '@/types/user';
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const { user, fetchUser } = useUser();
-
-  const [name, setName] = useState(user.name);
-  const [contact, setContact] = useState(user.contact);
-  const [skills, setSkills] = useState(user.skills);
-  const [loading, setLoading] = useState(false);
-
-  const addSkill = (skill: string) => setSkills([...skills, skill]);
+  const {
+    user: { email, ...rest },
+    fetchUser,
+  } = useUser();
+  const [formData, setFormData] = useState<IUpdateUser>(rest);
+  const setFormValue = (label: string, value: string) => {
+    setFormData(prev => ({ ...prev, [label]: value }));
+  };
+  const addSkill = (skill: string) =>
+    setFormData({ ...formData, skills: [...formData.skills, skill] });
 
   const removeSkill = (skill: string) =>
-    setSkills(skills.filter(val => val !== skill));
+    setFormData({
+      ...formData,
+      skills: formData.skills.filter(val => skill !== val),
+    });
+
+  const [loading, setLoading] = useState(false);
 
   const handleUpdate = async () => {
-    if (name === '' || contact === '')
+    if (formData.name === '' || formData.contact === '')
       return toast.error('Please fill in valid details');
 
     try {
       setLoading(true);
-      const payload = { name, contact, skills };
-      const res = await updateDetails(payload);
+      const res = await updateDetails(formData);
 
       if (!res.success) {
         setLoading(false);
@@ -49,41 +56,89 @@ const EditProfile = () => {
   };
 
   return (
-    <div className='min-h-screen flex justify-center items-center bg-gray-100 p-4'>
+    <div className='min-h-screen pb-12'>
       {loading && <Spinner />}
 
-      <div className='bg-white shadow-md rounded-lg p-8 w-full max-w-md gap-4 flex flex-col'>
+      <div className='bg-white p-8 w-full gap-4 flex flex-col'>
         <h2 className='text-2xl font-bold text-center'>Update Profile</h2>
 
         <Input
           label='Name'
           placeholder='Enter your name'
-          value={name}
-          onChange={setName}
+          value={formData.name}
+          onChange={(val: string) => {
+            setFormValue('name', val);
+          }}
         />
 
         <Input
           label='Email'
           placeholder='Enter your email'
-          value={user.email}
+          value={email}
           props={{ disabled: true }}
         />
 
         <Input
           label='Contact Number'
           placeholder='Enter your contact number'
-          value={contact}
-          onChange={(value: string) => setContact(value.replace(/\D/g, ''))}
+          value={formData.contact}
+          onChange={(value: string) =>
+            setFormValue('contact', value.replace(/\D/g, ''))
+          }
           props={{ maxLength: 10 }}
         />
 
         <SkillInput
-          skills={skills}
+          skills={formData.skills}
           addSkill={addSkill}
           removeSkill={removeSkill}
         />
 
-        <Button className='w-full mt-4 cursor-pointer' onClick={handleUpdate}>
+        <Input
+          label='Bio'
+          placeholder='Enter something about yourself'
+          value={formData.bio}
+          onChange={(value: string) => setFormValue('bio', value)}
+        />
+
+        <Input
+          label='Location'
+          placeholder='Enter your location'
+          value={formData.location}
+          onChange={(value: string) => setFormValue('location', value)}
+        />
+
+        <Input
+          label='Linkedin URL'
+          placeholder='Enter your linkedin url'
+          value={formData.linkedinLink}
+          onChange={(value: string) => setFormValue('linkedinLink', value)}
+        />
+
+        <Input
+          label='Github URL'
+          placeholder='Enter your github url'
+          value={formData.githubLink}
+          onChange={(value: string) => setFormValue('githubLink', value)}
+        />
+
+        <Input
+          label='Youtube URL'
+          placeholder='Enter your youtube url'
+          value={formData.youtubeLink}
+          onChange={(value: string) => setFormValue('youtubeLink', value)}
+        />
+
+        <Input
+          label='Instagram URL'
+          placeholder='Enter your instagram url'
+          value={formData.instagramLink}
+          onChange={(value: string) => setFormValue('instagramLink', value)}
+        />
+      </div>
+
+      <div className='fixed  bottom-0 w-full p-4 flex justify-center items-center bg-white'>
+        <Button className='cursor-pointer px-8' onClick={handleUpdate}>
           Update Profile
         </Button>
       </div>
