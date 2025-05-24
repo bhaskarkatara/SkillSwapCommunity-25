@@ -8,11 +8,13 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { BASE_URL } from '@/api/auth';
 import { useUser } from '@/context/auth/useUser';
+import { formatTimeAgo } from '@/utils/date';
 
 const WEBSOCKET_URL = BASE_URL + '/ws-chat';
 
 export default function ChatRoom({ chat }: { chat: IChat }) {
-  const { user, chatRoomId } = chat;
+  const { user, chatRoomId, offeredSkill, requestedSkill } = chat;
+  console.log(chat);
   const currentUser = useUser().user;
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -99,7 +101,14 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
   return (
     <div className='flex flex-1 flex-col'>
       <div className='p-5 border-b-[1px] border-[#ddd] border-solid flex justify-between items-center bg-white'>
-        <h2>Chat with {user.name}</h2>
+        <div>
+          <h2>Chat with {user.name}</h2>
+          <h3>
+            You learn
+            <span className='font-semibold'> {requestedSkill} </span>
+            and teach <span className='font-semibold'>{offeredSkill}</span>
+          </h3>
+        </div>
         <button className='px-5 py-2 bg-[#3b82f6] text-white border-none rounded-sm cursor-pointer'>
           Start Video Call
         </button>
@@ -131,7 +140,11 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
                     msg.senderId !== user.id ? '#d1fae5' : '#dbeafe',
                 }}
               >
-                {msg.message}
+                <div>{msg.message}</div>
+
+                <div className='text-[10px] text-gray-600 text-right italic'>
+                  {formatTimeAgo(msg.createdAt)}
+                </div>
               </div>
             </div>
           ))

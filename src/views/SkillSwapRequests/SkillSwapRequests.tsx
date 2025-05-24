@@ -102,52 +102,18 @@ const SkillSwapRequests = () => {
     <div className='max-w-2xl mx-auto p-6'>
       <h1 className=' text-center text-5xl font-bold '>Skill Swap Requests</h1>
 
-      <Tabs defaultValue='sent' className='w-full mt-8'>
+      <Tabs defaultValue='received' className='w-full mt-8'>
         <TabsList className='grid grid-cols-2 mb-4 h-14 w-full'>
-          <TabsTrigger value='sent' className='cursor-pointer h-12 text-2xl'>
-            Sent
-          </TabsTrigger>
           <TabsTrigger
             value='received'
             className='cursor-pointer h-12 text-2xl'
           >
             Received
           </TabsTrigger>
+          <TabsTrigger value='sent' className='cursor-pointer h-12 text-2xl'>
+            Sent
+          </TabsTrigger>
         </TabsList>
-
-        <TabsContent value='sent'>
-          <>
-            <div className='flex gap-4 px-8 pb-8 items-center'>
-              <div>Show:</div>
-
-              <div className='flex gap-4 items-center'>
-                {filters.map(filter => (
-                  <div className='flex gap-1 items-center' key={filter}>
-                    <input
-                      type='checkbox'
-                      id={filter}
-                      checked={selectedFilters.includes(filter)}
-                      onChange={() => onToggle(filter)}
-                    />
-                    <Label htmlFor={filter}>{filter}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className='space-y-4'>
-              {sentLoading ? (
-                <Loader2 className='h-12 w-12 animate-spin mx-auto my-2' />
-              ) : filteredSent.length === 0 ? (
-                <p className='text-muted-foreground'>No sent requests yet.</p>
-              ) : (
-                filteredSent.map(req => (
-                  <SentReqCard req={req} key={req.request.id} />
-                ))
-              )}
-            </div>
-          </>
-        </TabsContent>
 
         <TabsContent value='received'>
           <>
@@ -183,6 +149,40 @@ const SkillSwapRequests = () => {
                     onAction={handleAcceptReject}
                     key={req.request.id}
                   />
+                ))
+              )}
+            </div>
+          </>
+        </TabsContent>
+
+        <TabsContent value='sent'>
+          <>
+            <div className='flex gap-4 px-8 pb-8 items-center'>
+              <div>Show:</div>
+
+              <div className='flex gap-4 items-center'>
+                {filters.map(filter => (
+                  <div className='flex gap-1 items-center' key={filter}>
+                    <input
+                      type='checkbox'
+                      id={filter}
+                      checked={selectedFilters.includes(filter)}
+                      onChange={() => onToggle(filter)}
+                    />
+                    <Label htmlFor={filter}>{filter}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className='space-y-4'>
+              {sentLoading ? (
+                <Loader2 className='h-12 w-12 animate-spin mx-auto my-2' />
+              ) : filteredSent.length === 0 ? (
+                <p className='text-muted-foreground'>No sent requests yet.</p>
+              ) : (
+                filteredSent.map(req => (
+                  <SentReqCard req={req} key={req.request.id} />
                 ))
               )}
             </div>
