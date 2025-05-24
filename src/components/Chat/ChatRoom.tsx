@@ -1,14 +1,30 @@
 import { getChat } from '@/api/chat';
 import { IChat, IMessage } from '@/types/chat';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { BASE_URL } from '@/api/auth';
+import { useUser } from '@/context/auth/useUser';
+
+const WEBSOCKET_URL = BASE_URL + '/ws-chat';
 
 export default function ChatRoom({ chat }: { chat: IChat }) {
   const { user, chatRoomId } = chat;
+  const currentUser = useUser().user;
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
+
+  const containerRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     (async () => {
@@ -31,6 +47,55 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
     })();
   }, [chat.chatRoomId]);
 
+  const clientRef = useRef<any>(null);
+
+  useEffect(() => {
+    // Create STOMP client with SockJS fallback
+    const stompClient = new Client({
+      webSocketFactory: () => new SockJS(WEBSOCKET_URL),
+      debug: str => {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+    });
+
+    stompClient.onConnect = () => {
+      console.log('Connected to WebSocket');
+
+      // Subscribe to the topic for this chat room
+      stompClient.subscribe(`/topic/messages/${chatRoomId}`, message => {
+        const receivedMessage = JSON.parse(message.body);
+        setMessages(prev => [...prev, receivedMessage]);
+      });
+    };
+
+    stompClient.activate();
+
+    clientRef.current = stompClient;
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [chatRoomId]);
+
+  // Function to send message
+  const sendMessage = (message: string) => {
+    if (clientRef.current && clientRef.current.connected) {
+      const msg = {
+        senderId: currentUser.id,
+        receiverId: user.id,
+        message,
+        chatRoomId,
+      };
+
+      clientRef.current.publish({
+        destination: '/app/chat.sendMessage',
+        body: JSON.stringify(msg),
+      });
+      setNewMessage('');
+    }
+  };
+
   return (
     <div className='flex flex-1 flex-col'>
       <div className='p-5 border-b-[1px] border-[#ddd] border-solid flex justify-between items-center bg-white'>
@@ -41,7 +106,10 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
       </div>
 
       {/* Chat Messages */}
-      <div className='flex-1 p-5 bg-[#f0f2f5] overflow-auto'>
+      <div
+        className='flex-1 p-5 flex flex-col gap-4 bg-[#f0f2f5] overflow-auto'
+        ref={containerRef}
+      >
         {loading ? (
           <div className='h-full flex justify-center items-center '>
             <Loader2 className='h-12 w-12 animate-spin' />
@@ -79,7 +147,9 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
           className='flex-1 p-2 border-[1px] border-[#ccc] rounded-sm mr-2'
         />
         <button
-          //   onClick={handleSend}
+          onClick={() => {
+            sendMessage(newMessage);
+          }}
           className='px-5 py-2 bg-[#3b82f6] border-none text-white cursor-pointer rounded-sm'
         >
           Send
