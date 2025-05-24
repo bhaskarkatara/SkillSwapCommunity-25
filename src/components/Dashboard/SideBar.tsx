@@ -38,7 +38,7 @@ export default function SideBar() {
             onClick={() => navigate(appRoutes.chats)}
           >
             <i className='fas fa-comments'></i>
-            <span>Messages</span>
+            <span>Chats</span>
           </div>
           <div
             className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'

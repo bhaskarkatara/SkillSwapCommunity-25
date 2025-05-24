@@ -1,6 +1,6 @@
 import { ILogin, ISignUp } from '@/types/user';
 import axios from 'axios';
-const BASE_URL = 'https://skills-swap-backend-1.onrender.com';
+export const BASE_URL = 'https://skills-swap-backend-1.onrender.com';
 
 // Reusable Axios instance
 export const api = axios.create({
