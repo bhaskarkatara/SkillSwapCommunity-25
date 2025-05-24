@@ -1,6 +1,5 @@
 import { getChat } from '@/api/chat';
 import { IChat, IMessage } from '@/types/chat';
-import { Loader2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -14,7 +13,6 @@ const WEBSOCKET_URL = BASE_URL + '/ws-chat';
 
 export default function ChatRoom({ chat }: { chat: IChat }) {
   const { user, chatRoomId, offeredSkill, requestedSkill } = chat;
-  console.log(chat);
   const currentUser = useUser().user;
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -52,7 +50,6 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
   const clientRef = useRef<any>(null);
 
   useEffect(() => {
-    // Create STOMP client with SockJS fallback
     const stompClient = new Client({
       webSocketFactory: () => new SockJS(WEBSOCKET_URL),
       debug: str => {
@@ -62,9 +59,6 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
     });
 
     stompClient.onConnect = () => {
-      console.log('Connected to WebSocket');
-
-      // Subscribe to the topic for this chat room
       stompClient.subscribe(`/topic/messages/${chatRoomId}`, message => {
         const receivedMessage = JSON.parse(message.body);
         setMessages(prev => [...prev, receivedMessage]);
@@ -72,7 +66,6 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
     };
 
     stompClient.activate();
-
     clientRef.current = stompClient;
 
     return () => {
@@ -82,6 +75,8 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
 
   // Function to send message
   const sendMessage = (message: string) => {
+    if (message === '') return;
+
     if (clientRef.current && clientRef.current.connected) {
       const msg = {
         senderId: currentUser.id,
@@ -120,8 +115,11 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
         ref={containerRef}
       >
         {loading ? (
-          <div className='h-full flex justify-center items-center '>
-            <Loader2 className='h-12 w-12 animate-spin' />
+          <div className='flex h-full flex-col justify-end gap-4'>
+            <div className='rect skeleton-content bg-[#dbeafe]'></div>
+            <div className='rect skeleton-content self-end bg-[#d1fae5]'></div>
+            <div className='rect skeleton-content bg-[#dbeafe]'></div>
+            <div className='rect skeleton-content self-end bg-[#d1fae5]'></div>
           </div>
         ) : (
           messages.map(msg => (
