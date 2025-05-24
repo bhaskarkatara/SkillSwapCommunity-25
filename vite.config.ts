@@ -14,4 +14,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'), // Allows using @/ instead of relative paths
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1500, // ⬅️ Increase limit to 1500 KB (you can adjust as needed)
+  },
 });
