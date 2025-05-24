@@ -11,18 +11,11 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
   } = req;
 
   const bgClass =
-    status === 'pending'
+    status === 'Pending'
       ? 'bg-yellow-400'
       : status === 'Accepted'
         ? 'bg-green-400'
         : 'bg-red-400';
-
-  const label =
-    status === 'pending'
-      ? 'Pending'
-      : status === 'Accepted'
-        ? 'Accepted'
-        : 'Rejected';
 
   return (
     <div className='bg-white p-5 rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.1)] w-full text-center flex flex-col'>
@@ -50,7 +43,7 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
         {requestedSkill}
       </div>
 
-      {status === 'accepted' && (
+      {status === 'Accepted' && (
         <div className='text-left text-sm'>
           <span className=' font-semibold text-base'>
             Skill he want to learn:{' '}
@@ -72,7 +65,7 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
         className={`mt-4 w-full py-2 font-semibold ${bgClass}`}
         variant='secondary'
       >
-        {label}
+        {status}
       </Badge>
     </div>
   );

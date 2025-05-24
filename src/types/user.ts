@@ -1,8 +1,15 @@
 export type User = {
+  id: string;
   name: string;
   email: string;
   contact: string;
   skills: string[];
+  githubLink: string | null;
+  linkedinLink: string | null;
+  youtubeLink: string | null;
+  instagramLink: string | null;
+  bio: string | null;
+  location: string | null;
 };
 
 export type ISignUp = {
@@ -18,4 +25,4 @@ export type ILogin = {
   password: string;
 };
 
-export type IUpdateUser = Omit<User, 'email'>;
+export type IUpdateUser = Omit<User, 'email' | 'password'>;

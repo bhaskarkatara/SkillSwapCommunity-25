@@ -1,10 +1,21 @@
-export default function ProfileHeader({
-  name,
-  skills,
-}: {
-  name: string;
-  skills: string[];
-}) {
+import Github from '@/assets/icons/Github';
+import Linkedin from '@/assets/icons/Linkedin';
+import Youtube from '@/assets/icons/Youtube';
+import Instagram from '@/assets/icons/instagram-icon.png';
+
+import { User } from '@/types/user';
+
+export default function ProfileHeader({ user }: { user: User }) {
+  const {
+    name,
+    skills,
+    bio,
+    location,
+    githubLink,
+    linkedinLink,
+    youtubeLink,
+    instagramLink,
+  } = user;
   const skillString = skills.join(', ');
 
   return (
@@ -17,15 +28,41 @@ export default function ProfileHeader({
         </div>
         <div>
           <h3 className='text-xl font-semibold'>{name}</h3>
-          <p className='text-gray-600'>Creative Designer & Web Developer</p>
+          {location && <p className='text-gray-600'>{location}</p>}
           <p className='text-gray-600'>Skills: {skillString}</p>
         </div>
+        <div className='ml-auto self-start flex gap-2 items-center'>
+          {youtubeLink && (
+            <a href={youtubeLink} target='_blank'>
+              <Youtube />
+            </a>
+          )}
+
+          {githubLink && (
+            <a href={githubLink} target='_blank'>
+              <Github />
+            </a>
+          )}
+
+          {linkedinLink && (
+            <a href={linkedinLink} target='_blank'>
+              <Linkedin />
+            </a>
+          )}
+
+          {instagramLink && (
+            <a href={instagramLink} target='_blank' title='Instagram'>
+              <img
+                src={Instagram}
+                alt='instagram'
+                className='cursor-pointer h-6'
+              />
+            </a>
+          )}
+        </div>
       </div>
-      <p className='mt-4 text-gray-700'>
-        Passionate about design and technology. I love to collaborate with
-        others to create amazing user experiences. Always eager to learn and
-        share knowledge!
-      </p>
+
+      {bio && <p className='mt-4 text-gray-700'>{bio}</p>}
     </section>
   );
 }
