@@ -13,10 +13,10 @@ export const createChatRoom = async (payload: ICreateChatFormData) => {
 };
 
 // Get All Chats
-export const getChats = async () => {
+export const getChats = async (id: string) => {
   const token = localStorage.getItem('token');
 
-  const response = await api.get('chat/rooms/', {
+  const response = await api.get('chat/rooms/' + id, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

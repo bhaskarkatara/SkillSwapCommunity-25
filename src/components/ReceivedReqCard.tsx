@@ -8,6 +8,7 @@ import { acceptRequest, rejectRequest } from '@/api/swap-request';
 import { Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from '@/routes/appRoutes';
+import { createChatRoom } from '@/api/chat';
 
 export default function ReceivedReqCard({
   req,
@@ -18,6 +19,7 @@ export default function ReceivedReqCard({
 }) {
   const navigate = useNavigate();
   const {
+    receiverDetails: receiver,
     senderDetails: sender,
     request: { id, message, status, offeredSkill, requestedSkill },
   } = req;
@@ -37,6 +39,14 @@ export default function ReceivedReqCard({
       const res = await acceptRequest(id, selectedSkill);
 
       if (!res.success) return toast.error(res.message);
+
+      const response = await createChatRoom({
+        user1Id: sender.id,
+        user2Id: receiver.id,
+        swapRequestId: res.data.id,
+      });
+
+      if (!response.success) return toast.error(response.message);
 
       setLoading(0);
       onAction(res.data);
@@ -90,7 +100,7 @@ export default function ReceivedReqCard({
         {requestedSkill}
       </div>
 
-      {status === 'pending' && (
+      {status === 'Pending' && (
         <div className='text-left text-sm flex gap-4 items-start mt-2'>
           <span className=' font-semibold text-base'>
             Skill you can learn from him:{' '}
@@ -105,7 +115,7 @@ export default function ReceivedReqCard({
         </div>
       )}
 
-      {status == 'accepted' && (
+      {status == 'Accepted' && (
         <div className='text-left text-sm'>
           <span className=' font-semibold text-base'>
             Skill you want to learn:{' '}
@@ -123,7 +133,7 @@ export default function ReceivedReqCard({
         </div>
       )}
 
-      {status !== 'pending' ? (
+      {status !== 'Pending' ? (
         <Badge
           className={`mt-2 w-full py-2 font-semibold ${bgClass} text-black`}
         >

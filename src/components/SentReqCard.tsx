@@ -43,7 +43,7 @@ export default function SentReqCard({ req }: { req: ISwapRequest }) {
         {requestedSkill}
       </div>
 
-      {status === 'accepted' && (
+      {status === 'Accepted' && (
         <div className='text-left text-sm'>
           <span className=' font-semibold text-base'>
             Skill he want to learn:{' '}

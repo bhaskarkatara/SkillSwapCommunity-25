@@ -76,12 +76,14 @@ const SkillSwapRequests = () => {
       : [...selectedFilters, filter];
 
     setSelectedFilters(updatedSelectedFilters);
+  };
 
+  useEffect(() => {
     setFilteredSent(
       sent.filter(req => {
         return (
-          updatedSelectedFilters.length === 0 ||
-          updatedSelectedFilters.includes(req.request.status)
+          selectedFilters.length === 0 ||
+          selectedFilters.includes(req.request.status)
         );
       }),
     );
@@ -89,12 +91,12 @@ const SkillSwapRequests = () => {
     setFilteredReceived(
       received.filter(req => {
         return (
-          updatedSelectedFilters.length === 0 ||
-          updatedSelectedFilters.includes(req.request.status)
+          selectedFilters.length === 0 ||
+          selectedFilters.includes(req.request.status)
         );
       }),
     );
-  };
+  }, [selectedFilters, sent, received]);
 
   return (
     <div className='max-w-2xl mx-auto p-6'>
