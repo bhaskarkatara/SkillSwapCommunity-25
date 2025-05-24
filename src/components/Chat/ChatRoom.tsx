@@ -82,6 +82,8 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
 
   // Function to send message
   const sendMessage = (message: string) => {
+    if (message === '') return;
+
     if (clientRef.current && clientRef.current.connected) {
       const msg = {
         senderId: currentUser.id,
