@@ -1,6 +1,7 @@
+import Challenge from '@/assets/icons/Challenge';
 import appRoutes from '@/routes/appRoutes';
 import LogoutModal from '@/views/Dashboard/LogoutModal';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function SideBar() {
@@ -39,6 +40,20 @@ export default function SideBar() {
           >
             <i className='fas fa-comments'></i>
             <span>Chats</span>
+          </div>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'
+            onClick={() => navigate(appRoutes.certifications)}
+          >
+            <i className='fa-solid fa-certificate'></i>
+            <span>Certifications</span>
+          </div>
+          <div
+            className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer group'
+            onClick={() => navigate(appRoutes.skillChallenges)}
+          >
+            <Challenge />
+            <span>Challenges</span>
           </div>
           <div
             className='flex items-center space-x-3 text-gray-700 hover:text-blue-500 cursor-pointer'

@@ -11,7 +11,13 @@ import { formatTimeAgo } from '@/utils/date';
 
 const WEBSOCKET_URL = BASE_URL + '/ws-chat';
 
-export default function ChatRoom({ chat }: { chat: IChat }) {
+export default function ChatRoom({
+  chat,
+  updateChats,
+}: {
+  chat: IChat;
+  updateChats: any;
+}) {
   const { user, chatRoomId, offeredSkill, requestedSkill } = chat;
   const currentUser = useUser().user;
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -62,6 +68,7 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
       stompClient.subscribe(`/topic/messages/${chatRoomId}`, message => {
         const receivedMessage = JSON.parse(message.body);
         setMessages(prev => [...prev, receivedMessage]);
+        updateChats(chatRoomId);
       });
     };
 
@@ -92,6 +99,14 @@ export default function ChatRoom({ chat }: { chat: IChat }) {
       setNewMessage('');
     }
   };
+
+  useEffect(() => {
+    if (messages.length === 0) return;
+
+    const last_message_timestamp = messages[messages.length - 1].createdAt;
+
+    localStorage.setItem(chatRoomId, last_message_timestamp);
+  }, [messages]);
 
   return (
     <div className='flex flex-1 flex-col'>
