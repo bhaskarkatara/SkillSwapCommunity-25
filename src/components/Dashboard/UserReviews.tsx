@@ -1,13 +1,15 @@
-export default function UserReviews() {
+export default function UserReviews({ name }: any) {
   const reviews = [
     {
       user: 'Alice Smith',
       review:
-        'John is a fantastic collaborator! He helped me improve my design skills significantly.',
+        name +
+        ' is a fantastic collaborator! He helped me improve my design skills significantly.',
     },
     {
       user: 'Bob Johnson',
-      review: 'Working with John was a great experience. Highly recommend!',
+      review:
+        'Working with ' + name + ' was a great experience. Highly recommend!',
     },
   ];
 
