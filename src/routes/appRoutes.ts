@@ -13,6 +13,8 @@ const appRoutes = {
   createSession: '/create-session',
   skillSwapRequests: '/skill-swap-requests',
   userProfile: '/user-profile',
+  certifications: '/certifications',
+  skillChallenges: '/skill-challenges',
 } as const;
 
 export default appRoutes;

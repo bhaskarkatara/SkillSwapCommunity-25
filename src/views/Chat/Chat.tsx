@@ -2,13 +2,21 @@ import { getChats } from '@/api/chat';
 import ChatRoom from '@/components/Chat/ChatRoom';
 import Sidebar from '@/components/Chat/Sidebar';
 import { useUser } from '@/context/auth/useUser';
-import { IChat } from '@/types/chat';
+import { IChat, IMessage } from '@/types/chat';
 import { Loader2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { BASE_URL } from '@/api/auth';
+import { User } from '@/types/user';
+
+const WEBSOCKET_URL = BASE_URL + '/ws-chat';
 
 const Chat: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState(0);
+  const [selectedChat, setSelectedChat] = useState<IChat | null>(null);
 
   const { id } = useUser().user;
   const [chats, setChats] = useState<IChat[]>([]);
@@ -24,6 +32,7 @@ const Chat: React.FC = () => {
 
         setChats(res.data);
         setChatsLoading(false);
+        if (res.data.length !== 0) setSelectedChat(res.data[0]);
       } catch (err) {
         console.log(err);
         toast.error('something went wrong. unable to fetch all chats');
@@ -31,8 +40,50 @@ const Chat: React.FC = () => {
       }
     })();
   }, []);
+  const onSelect = (chat: IChat) => setSelectedChat(chat);
 
-  const onSelect = (index: number) => setSelectedUser(index);
+  const clientRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!chats) return;
+
+    const stompClient = new Client({
+      webSocketFactory: () => new SockJS(WEBSOCKET_URL),
+      debug: str => {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+    });
+
+    stompClient.onConnect = () => {
+      stompClient.subscribe(`/topic/user/${id}`, message => {
+        const receivedMessage: IMessage = JSON.parse(message.body);
+        updateChats(receivedMessage.chatRoomId);
+      });
+    };
+
+    stompClient.activate();
+    clientRef.current = stompClient;
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [chats]);
+
+  const updateChats = (chatRoomId: string) => {
+    const updated = chats.find(chat => chat.chatRoomId === chatRoomId);
+    if (!updated) return;
+
+    // If the chat is already at the top, do nothing
+    if (chats[0].chatRoomId === chatRoomId) return;
+
+    const reorderedChats = [
+      updated,
+      ...chats.filter(chat => chat.chatRoomId !== chatRoomId),
+    ];
+
+    setChats(reorderedChats);
+  };
 
   if (!chatsLoading && chats.length === 0)
     return (
@@ -50,12 +101,12 @@ const Chat: React.FC = () => {
     >
       <Sidebar chats={chats} loading={chatsLoading} onSelect={onSelect} />
 
-      {chatsLoading ? (
+      {chatsLoading || selectedChat === null ? (
         <div className='w-full flex justify-center items-center'>
           <Loader2 className='h-12 w-12 animate-spin' />
         </div>
       ) : (
-        <ChatRoom chat={chats[selectedUser]} />
+        <ChatRoom chat={selectedChat} updateChats={updateChats} />
       )}
     </div>
   );

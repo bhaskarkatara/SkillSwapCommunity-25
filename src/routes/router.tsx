@@ -20,6 +20,8 @@ import appRoutes from './appRoutes.ts';
 import Dashboard from '@/views/Dashboard/Dashboard.tsx';
 import SkillSwapRequests from '@/views/SkillSwapRequests/SkillSwapRequests.tsx';
 import Profile from '@/views/Profile/Profile.tsx';
+import Certifications from '@/views/Certifications/Certifications.tsx';
+import SkillChallenges from '@/views/SkillChallenges/SkillChallenges.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,6 +43,8 @@ const router = createBrowserRouter(
         <Route path={appRoutes.posts} element={<Posts />} />
         <Route path={appRoutes.createSession} element={<CreateSession />} />
         <Route path={appRoutes.userProfile} element={<Profile />} />
+        <Route path={appRoutes.certifications} element={<Certifications />} />
+        <Route path={appRoutes.skillChallenges} element={<SkillChallenges />} />
         <Route
           path={appRoutes.skillSwapRequests}
           element={<SkillSwapRequests />}
