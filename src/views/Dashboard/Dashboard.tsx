@@ -24,7 +24,7 @@ const Dashboard = () => {
 
         <ProgressTracker />
 
-        <UserReviews />
+        <UserReviews name={user.name} />
 
         <SessionHistory />
 
